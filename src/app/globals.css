@@ -1,26 +1,105 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --bg-white: #ffffff;
+    --color-main: #0070bc;
+    --color-black: #000000;
+    --color-light: #e6f4fd;
+    
+    --background: #ffffff;
+    --foreground: #000000;
+    --primary: #0070bc;
+    --accent: #e6f4fd;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background-color: #ffffff;
+    color: #000000;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: #ffffff;
+    color: #000000;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: #0070bc;
+    color: #ffffff;
+  }
+
+  /* Custom Clean Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #ffffff;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #0070bc;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #005088;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* 4-Color Architectural Theme Utility Classes */
+.bg-brand-white {
+  background-color: #ffffff;
+}
+
+.bg-brand-main {
+  background-color: #0070bc;
+}
+
+.bg-brand-black {
+  background-color: #000000;
+}
+
+.bg-brand-light {
+  background-color: #e6f4fd;
+}
+
+.text-brand-white {
+  color: #ffffff;
+}
+
+.text-brand-main {
+  color: #0070bc;
+}
+
+.text-brand-black {
+  color: #000000;
+}
+
+.text-brand-light {
+  color: #e6f4fd;
+}
+
+.border-brand-main {
+  border-color: #0070bc;
+}
+
+.border-brand-light {
+  border-color: #e6f4fd;
+}
+
+.border-brand-black {
+  border-color: #000000;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
