@@ -12,7 +12,7 @@ export function ProjectsTeaser() {
   const teaserProjects = PROJECTS_DATA.slice(0, 3);
 
   return (
-    <section className="py-24 bg-white border-t border-[#e6f4fd] relative">
+    <section className="py-24 bg-white border-t border-[#e6f7f5] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <SectionHeading
@@ -25,7 +25,7 @@ export function ProjectsTeaser() {
 
           <Link
             href="/projects"
-            className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] font-bold text-[#0070bc] hover:text-black transition-colors pb-2"
+            className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] font-bold text-[#009886] hover:text-black transition-colors pb-2"
           >
             <span>Explore All Projects</span>
             <ArrowRight className="w-4 h-4" />
@@ -41,10 +41,10 @@ export function ProjectsTeaser() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: idx * 0.1 }}
-              className="group bg-white border border-[#e6f4fd] hover:border-[#0070bc] rounded-xl overflow-hidden flex flex-col transition-all duration-300 shadow-sm hover:shadow-md"
+              className="group bg-white border border-[#e6f7f5] hover:border-[#009886] rounded-xl overflow-hidden flex flex-col transition-all duration-300 shadow-sm hover:shadow-md"
             >
               {/* Project Image */}
-              <div className="relative w-full h-72 overflow-hidden bg-[#e6f4fd]">
+              <div className="relative w-full h-72 overflow-hidden bg-[#e6f7f5]">
                 <Image
                   src={project.mainImage}
                   alt={project.title}
@@ -53,7 +53,7 @@ export function ProjectsTeaser() {
                   className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                <div className="absolute top-3 left-3 px-3 py-1 bg-white/95 backdrop-blur-md rounded-full border border-[#e6f4fd] text-[10px] uppercase font-bold tracking-wider text-[#0070bc] shadow-sm">
+                <div className="absolute top-3 left-3 px-3 py-1 bg-white/95 backdrop-blur-md rounded-full border border-[#e6f7f5] text-[10px] uppercase font-bold tracking-wider text-[#009886] shadow-sm">
                   {project.category}
                 </div>
               </div>
@@ -62,11 +62,11 @@ export function ProjectsTeaser() {
               <div className="p-6 flex flex-col justify-between flex-1 bg-white">
                 <div>
                   <div className="flex items-center gap-1.5 text-xs text-black/70 mb-2 font-mono">
-                    <MapPin className="w-3.5 h-3.5 text-[#0070bc]" />
+                    <MapPin className="w-3.5 h-3.5 text-[#009886]" />
                     <span>{project.location}</span>
                   </div>
 
-                  <h3 className="text-lg font-bold text-black group-hover:text-[#0070bc] transition-colors">
+                  <h3 className="text-lg font-bold text-black group-hover:text-[#009886] transition-colors">
                     <Link href={`/projects#${project.slug}`}>{project.title}</Link>
                   </h3>
 
@@ -74,7 +74,7 @@ export function ProjectsTeaser() {
                     {project.description}
                   </p>
 
-                  <div className="mt-4 pt-3 border-t border-[#e6f4fd] text-[11px] text-black/60">
+                  <div className="mt-4 pt-3 border-t border-[#e6f7f5] text-[11px] text-black/60">
                     <span>Installed: </span>
                     <span className="text-black font-semibold">
                       {project.installedProducts.map((p) => p.productName).join(", ")}
@@ -82,13 +82,13 @@ export function ProjectsTeaser() {
                   </div>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-[#e6f4fd] flex items-center justify-between">
+                <div className="mt-6 pt-4 border-t border-[#e6f7f5] flex items-center justify-between">
                   <Link
                     href={`/projects`}
-                    className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider font-bold text-black group-hover:text-[#0070bc] transition-colors"
+                    className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider font-bold text-black group-hover:text-[#009886] transition-colors"
                   >
                     <span>View Project</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-[#0070bc]" />
+                    <ArrowRight className="w-3.5 h-3.5 text-[#009886]" />
                   </Link>
                   <span className="text-[10px] font-mono text-black/50">
                     {project.yearCompleted}

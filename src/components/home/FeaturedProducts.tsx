@@ -19,7 +19,7 @@ export function FeaturedProducts() {
   });
 
   return (
-    <section className="py-24 bg-white border-t border-[#e6f4fd]">
+    <section className="py-24 bg-white border-t border-[#e6f7f5]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <SectionHeading
@@ -31,13 +31,13 @@ export function FeaturedProducts() {
           />
 
           {/* Filter Pills */}
-          <div className="flex items-center gap-2 bg-[#e6f4fd] p-1 rounded-sm self-start md:self-auto border border-[#0070bc]/20">
+          <div className="flex items-center gap-2 bg-[#e6f7f5] p-1 rounded-sm self-start md:self-auto border border-[#009886]/20">
             <button
               onClick={() => setSelectedFilter("all")}
               className={`px-3.5 py-1.5 text-xs uppercase tracking-wider font-bold rounded-xs transition-colors ${
                 selectedFilter === "all"
-                  ? "bg-[#0070bc] text-white"
-                  : "text-black hover:text-[#0070bc]"
+                  ? "bg-[#009886] text-white"
+                  : "text-black hover:text-[#009886]"
               }`}
             >
               All Systems
@@ -46,8 +46,8 @@ export function FeaturedProducts() {
               onClick={() => setSelectedFilter("doors")}
               className={`px-3.5 py-1.5 text-xs uppercase tracking-wider font-bold rounded-xs transition-colors ${
                 selectedFilter === "doors"
-                  ? "bg-[#0070bc] text-white"
-                  : "text-black hover:text-[#0070bc]"
+                  ? "bg-[#009886] text-white"
+                  : "text-black hover:text-[#009886]"
               }`}
             >
               Door Systems
@@ -56,8 +56,8 @@ export function FeaturedProducts() {
               onClick={() => setSelectedFilter("windows")}
               className={`px-3.5 py-1.5 text-xs uppercase tracking-wider font-bold rounded-xs transition-colors ${
                 selectedFilter === "windows"
-                  ? "bg-[#0070bc] text-white"
-                  : "text-black hover:text-[#0070bc]"
+                  ? "bg-[#009886] text-white"
+                  : "text-black hover:text-[#009886]"
               }`}
             >
               Window Systems
@@ -76,7 +76,7 @@ export function FeaturedProducts() {
         <div className="mt-16 text-center">
           <Link
             href="/products"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-[#e6f4fd] hover:bg-[#0070bc] text-xs uppercase tracking-[0.2em] font-bold text-black hover:text-white border border-[#0070bc]/30 rounded-sm transition-all shadow-xs"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-[#e6f7f5] hover:bg-[#009886] text-xs uppercase tracking-[0.2em] font-bold text-black hover:text-white border border-[#009886]/30 rounded-sm transition-all shadow-xs"
           >
             <span>Explore All 8 Engineered Systems</span>
             <ArrowRight className="w-4 h-4" />

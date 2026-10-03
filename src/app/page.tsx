@@ -1,5 +1,5 @@
-import React from "react";
-import { HeroSection } from "@/components/home/HeroSection";
+import { GlyphPortalSection } from "@/components/home/GlyphPortalSection";
+import { WhoWeAreSection } from "@/components/home/WhoWeAreSection";
 import { TrustMetrics } from "@/components/home/TrustMetrics";
 import { CategoryGrid } from "@/components/home/CategoryGrid";
 import { FeaturedProducts } from "@/components/home/FeaturedProducts";
@@ -11,13 +11,16 @@ import { CTASection } from "@/components/home/CTASection";
 export default function HomePage() {
   return (
     <div className="w-full flex flex-col">
-      {/* 1. Cinematic Hero Section */}
-      <HeroSection />
+      {/* 1. Official SMC Logo Zoom Hero Section */}
+      <GlyphPortalSection />
 
-      {/* 2. Trust & Introduction Metrics */}
+      {/* 2. Who We Are Section */}
+      <WhoWeAreSection />
+
+      {/* 3. Trust & Introduction Metrics */}
       <TrustMetrics />
 
-      {/* 3. Product Categories Grid */}
+      {/* 4. Product Categories Grid */}
       <CategoryGrid />
 
       {/* 4. Interactive 3D & Mobile AR Room Visualizer Spotlight */}

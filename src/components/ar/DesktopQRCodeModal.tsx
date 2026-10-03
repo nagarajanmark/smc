@@ -92,7 +92,7 @@ export function DesktopQRCodeModal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ duration: 0.2 }}
-            className="relative w-full max-w-sm bg-white border border-[#e6f4fd] rounded-2xl shadow-2xl z-10 p-6 flex flex-col items-center text-center"
+            className="relative w-full max-w-sm bg-white border border-[#e6f7f5] rounded-2xl shadow-2xl z-10 p-6 flex flex-col items-center text-center"
           >
             {/* Close Button */}
             <button
@@ -112,7 +112,7 @@ export function DesktopQRCodeModal({
             </p>
 
             {/* Crisp QR Code */}
-            <div className="mt-5 w-56 h-56 flex items-center justify-center bg-white rounded-xl border-2 border-[#0070bc]/30 p-2 shadow-sm">
+            <div className="mt-5 w-56 h-56 flex items-center justify-center bg-white rounded-xl border-2 border-[#009886]/30 p-2 shadow-sm">
               {qrDataUrl && !isGenerating ? (
                 <img
                   src={qrDataUrl}
@@ -121,7 +121,7 @@ export function DesktopQRCodeModal({
                 />
               ) : (
                 <div className="flex flex-col items-center justify-center text-black/50 text-xs">
-                  <RefreshCw className="w-6 h-6 animate-spin text-[#0070bc] mb-1.5" />
+                  <RefreshCw className="w-6 h-6 animate-spin text-[#009886] mb-1.5" />
                   <span>Generating QR...</span>
                 </div>
               )}
@@ -129,7 +129,7 @@ export function DesktopQRCodeModal({
 
             {/* Simple Instruction */}
             <div className="mt-3 flex items-center gap-1.5 text-xs text-black/70 font-medium">
-              <Smartphone className="w-3.5 h-3.5 text-[#0070bc]" />
+              <Smartphone className="w-3.5 h-3.5 text-[#009886]" />
               <span>Point phone camera to open</span>
             </div>
 
@@ -137,11 +137,11 @@ export function DesktopQRCodeModal({
             <div className="mt-5 w-full space-y-2">
               <button
                 onClick={handleCopyLink}
-                className="w-full py-2.5 px-3 bg-[#e6f4fd] hover:bg-[#0070bc] hover:text-white text-black text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                className="w-full py-2.5 px-3 bg-[#e6f7f5] hover:bg-[#009886] hover:text-white text-black text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
               >
                 {copied ? (
                   <>
-                    <Check className="w-3.5 h-3.5 text-[#0070bc]" />
+                    <Check className="w-3.5 h-3.5 text-[#009886]" />
                     <span>Link Copied!</span>
                   </>
                 ) : (
@@ -156,7 +156,7 @@ export function DesktopQRCodeModal({
                 onClick={handleLaunchOnDesktop}
                 className="w-full py-2 px-3 bg-white hover:bg-neutral-100 text-black/80 hover:text-black border border-neutral-200 text-xs font-medium rounded-xl flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
               >
-                <Laptop className="w-3.5 h-3.5 text-[#0070bc]" />
+                <Laptop className="w-3.5 h-3.5 text-[#009886]" />
                 <span>Test Camera on Desktop</span>
               </button>
             </div>

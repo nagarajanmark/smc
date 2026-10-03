@@ -1,21 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Sora } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const sora = Sora({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: "--font-sora",
+  weight: ["300", "400", "500", "600", "700", "800"],
+  display: "swap",
 });
 
 export const viewport: Viewport = {
-  themeColor: "#0070bc",
+  themeColor: "#009886",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -23,23 +20,23 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "SMC FABRICATION | Luxury Architectural Doors & Windows",
-    template: "%s | SMC FABRICATION",
+    default: "SMC FABRICATIONS | UPVC Doors & Windows | Pollachi",
+    template: "%s | SMC FABRICATIONS",
   },
   description:
-    "Precision-crafted luxury doors, ultra-slim sliding glass walls, and high-efficiency architectural window systems with 3D product previews and mobile camera room visualization.",
+    "SMC Fabrications: Manufacturers & Dealers in UPVC Doors & Windows. No. 1 Windows & Doors UPVC Profiles in India High Quality and Advanced Technology. D Wood Go Green. Pollachi, Tamil Nadu.",
   keywords: [
-    "architectural doors",
-    "minimalist sliding windows",
-    "pivot entrance doors",
-    "thermal break aluminium windows",
-    "bespoke teak doors",
-    "UPVC casement windows",
-    "camera room visualizer doors",
-    "SMC Fabrication",
+    "UPVC doors and windows",
+    "manufacturers dealers UPVC doors windows",
+    "Pollachi UPVC windows",
+    "UPVC profiles India",
+    "D Wood Go Green",
+    "sliding UPVC doors",
+    "casement UPVC windows",
+    "SMC Fabrications Pollachi",
   ],
-  authors: [{ name: "SMC FABRICATION" }],
-  creator: "SMC FABRICATION",
+  authors: [{ name: "SMC FABRICATIONS" }],
+  creator: "SMC FABRICATIONS",
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -78,9 +75,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={sora.variable}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-black min-h-screen flex flex-col`}
+        className={`${sora.className} antialiased bg-white text-black min-h-screen flex flex-col`}
       >
         <Header />
         <main className="flex-1 bg-white">{children}</main>

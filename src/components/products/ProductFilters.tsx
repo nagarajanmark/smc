@@ -61,8 +61,8 @@ export function ProductFilters({
   const finishes = [
     { name: "All Finishes", hex: "all" },
     { name: "Obsidian Black", hex: "#000000" },
-    { name: "Architectural Blue", hex: "#0070bc" },
-    { name: "Ice Blue Light", hex: "#e6f4fd" },
+    { name: "Architectural Green", hex: "#009886" },
+    { name: "Ice Mint Light", hex: "#e6f7f5" },
     { name: "Pure White", hex: "#ffffff" },
   ];
 
@@ -76,7 +76,7 @@ export function ProductFilters({
   return (
     <div className="w-full space-y-4 mb-8">
       {/* Search & Top Action Bar */}
-      <div className="bg-white border-2 border-[#e6f4fd] rounded-xl p-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 shadow-sm">
+      <div className="bg-white border-2 border-[#e6f7f5] rounded-xl p-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 shadow-sm">
         {/* Search Bar */}
         <div className="relative flex-1 max-w-md">
           <Search className="w-4 h-4 text-black/50 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -85,7 +85,7 @@ export function ProductFilters({
             value={filters.searchQuery}
             onChange={(e) => onFilterChange({ searchQuery: e.target.value })}
             placeholder="Search by product name, SKU or keyword..."
-            className="w-full pl-10 pr-10 py-2.5 bg-[#e6f4fd]/50 border border-[#e6f4fd] focus:border-[#0070bc] rounded-lg text-xs text-black placeholder-black/50 focus:outline-none transition-colors"
+            className="w-full pl-10 pr-10 py-2.5 bg-[#e6f7f5]/50 border border-[#e6f7f5] focus:border-[#009886] rounded-lg text-xs text-black placeholder-black/50 focus:outline-none transition-colors"
           />
           {filters.searchQuery && (
             <button
@@ -102,9 +102,9 @@ export function ProductFilters({
           {/* Mobile Filters Trigger */}
           <button
             onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)}
-            className="md:hidden flex items-center gap-2 px-3 py-2 bg-[#e6f4fd] border border-[#0070bc] rounded-lg text-xs font-bold text-black"
+            className="md:hidden flex items-center gap-2 px-3 py-2 bg-[#e6f7f5] border border-[#009886] rounded-lg text-xs font-bold text-black"
           >
-            <SlidersHorizontal className="w-3.5 h-3.5 text-[#0070bc]" />
+            <SlidersHorizontal className="w-3.5 h-3.5 text-[#009886]" />
             <span>Filters {hasActiveFilters && "(Active)"}</span>
           </button>
 
@@ -114,7 +114,7 @@ export function ProductFilters({
             <select
               value={filters.sortBy}
               onChange={(e) => onFilterChange({ sortBy: e.target.value as any })}
-              className="bg-white border border-[#e6f4fd] text-xs text-black rounded-lg px-3 py-2 font-medium focus:outline-none focus:border-[#0070bc]"
+              className="bg-white border border-[#e6f7f5] text-xs text-black rounded-lg px-3 py-2 font-medium focus:outline-none focus:border-[#009886]"
             >
               <option value="featured">Featured Systems</option>
               <option value="newest">Newest Releases</option>
@@ -124,14 +124,14 @@ export function ProductFilters({
           </div>
 
           {/* Grid / List Toggle */}
-          <div className="hidden sm:flex items-center bg-[#e6f4fd] border border-[#e6f4fd] rounded-lg p-0.5">
+          <div className="hidden sm:flex items-center bg-[#e6f7f5] border border-[#e6f7f5] rounded-lg p-0.5">
             <button
               onClick={() => onFilterChange({ viewMode: "grid" })}
               title="Grid View"
               className={cn(
                 "p-1.5 rounded-md transition-colors",
                 filters.viewMode === "grid"
-                  ? "bg-[#0070bc] text-white"
+                  ? "bg-[#009886] text-white"
                   : "text-black/60 hover:text-black"
               )}
             >
@@ -143,7 +143,7 @@ export function ProductFilters({
               className={cn(
                 "p-1.5 rounded-md transition-colors",
                 filters.viewMode === "list"
-                  ? "bg-[#0070bc] text-white"
+                  ? "bg-[#009886] text-white"
                   : "text-black/60 hover:text-black"
               )}
             >
@@ -153,102 +153,30 @@ export function ProductFilters({
         </div>
       </div>
 
-      {/* Main Filter Dropdowns Bar (Desktop & Expanded Mobile) */}
-      <div
-        className={cn(
-          "bg-white border-2 border-[#e6f4fd] rounded-xl p-4 shadow-sm",
-          isMobileFiltersOpen ? "block" : "hidden md:block"
-        )}
-      >
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Category Filter */}
-          <div>
-            <label className="text-[11px] font-mono text-black/70 font-bold uppercase block mb-1.5">
-              Category
-            </label>
-            <select
-              value={filters.category}
-              onChange={(e) => onFilterChange({ category: e.target.value })}
-              className="w-full bg-[#e6f4fd]/50 border border-[#e6f4fd] text-xs text-black font-medium rounded-lg px-3 py-2 focus:outline-none focus:border-[#0070bc]"
-            >
-              {categories.map((c) => (
-                <option key={c.value} value={c.value}>
-                  {c.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Material Filter */}
-          <div>
-            <label className="text-[11px] font-mono text-black/70 font-bold uppercase block mb-1.5">
-              Core Material
-            </label>
-            <select
-              value={filters.material}
-              onChange={(e) => onFilterChange({ material: e.target.value })}
-              className="w-full bg-[#e6f4fd]/50 border border-[#e6f4fd] text-xs text-black font-medium rounded-lg px-3 py-2 focus:outline-none focus:border-[#0070bc]"
-            >
-              {materials.map((m) => (
-                <option key={m.value} value={m.value}>
-                  {m.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Opening Mechanism */}
-          <div>
-            <label className="text-[11px] font-mono text-black/70 font-bold uppercase block mb-1.5">
-              Opening Mechanism
-            </label>
-            <select
-              value={filters.openingType}
-              onChange={(e) => onFilterChange({ openingType: e.target.value })}
-              className="w-full bg-[#e6f4fd]/50 border border-[#e6f4fd] text-xs text-black font-medium rounded-lg px-3 py-2 focus:outline-none focus:border-[#0070bc]"
-            >
-              {openingTypes.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Color & Finish Filter Swatches */}
-          <div>
-            <label className="text-[11px] font-mono text-black/70 font-bold uppercase block mb-1.5">
-              Colour & Finish Swatch
-            </label>
-            <div className="flex items-center gap-1.5 flex-wrap pt-1">
-              {finishes.map((f) => {
-                const isSelected = filters.finishHex === f.hex;
-                return (
-                  <button
-                    key={f.hex}
-                    onClick={() => onFilterChange({ finishHex: f.hex })}
-                    title={f.name}
-                    className={cn(
-                      "w-6 h-6 rounded-full border transition-all flex items-center justify-center shadow-sm",
-                      isSelected
-                        ? "border-[#0070bc] ring-2 ring-[#0070bc]/50 scale-110"
-                        : "border-black/20 hover:border-[#0070bc]",
-                      f.hex === "all" ? "bg-gradient-to-r from-black via-[#0070bc] to-[#e6f4fd]" : ""
-                    )}
-                    style={f.hex !== "all" ? { backgroundColor: f.hex } : {}}
-                  >
-                    {isSelected && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#0070bc]" />
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+      {/* Main Categories Bar (Desktop & Mobile) */}
+      <div className="bg-white border-2 border-[#e6f7f5] rounded-xl p-3 shadow-sm">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+          {categories.map((c) => {
+            const isSelected = filters.category === c.value;
+            return (
+              <button
+                key={c.value}
+                onClick={() => onFilterChange({ category: c.value })}
+                className={cn(
+                  "px-3.5 py-2 text-xs font-bold rounded-lg transition-all whitespace-nowrap cursor-pointer",
+                  isSelected
+                    ? "bg-[#009886] text-white shadow-xs"
+                    : "bg-[#e6f7f5]/60 hover:bg-[#e6f7f5] text-black/80 hover:text-black"
+                )}
+              >
+                {c.label}
+              </button>
+            );
+          })}
         </div>
 
         {/* Active Filter Pills & Results Count */}
-        <div className="mt-4 pt-3 border-t border-[#e6f4fd] flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div className="mt-4 pt-3 border-t border-[#e6f7f5] flex flex-wrap items-center justify-between gap-3 text-xs">
           <div className="flex items-center gap-2">
             <span className="text-black/70">
               Showing <strong className="text-black font-bold">{totalCount}</strong> systems
@@ -257,7 +185,7 @@ export function ProductFilters({
             {hasActiveFilters && (
               <button
                 onClick={onResetFilters}
-                className="inline-flex items-center gap-1 text-[11px] text-[#0070bc] font-bold hover:underline ml-2"
+                className="inline-flex items-center gap-1 text-[11px] text-[#009886] font-bold hover:underline ml-2"
               >
                 <RotateCcw className="w-3 h-3" />
                 <span>Reset All Filters</span>

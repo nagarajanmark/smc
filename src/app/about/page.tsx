@@ -16,22 +16,22 @@ import {
 export default function AboutPage() {
   const values = [
     {
-      icon: <Cpu className="w-6 h-6 text-[#0070bc]" />,
+      icon: <Cpu className="w-6 h-6 text-[#009886]" />,
       title: "Sub-Millimeter CNC Precision",
       desc: "Every profile, joint, and miter is machined using advanced 5-axis computer-controlled tooling, guaranteeing airtight seal integrity and flawless flush seams.",
     },
     {
-      icon: <Trees className="w-6 h-6 text-[#0070bc]" />,
+      icon: <Trees className="w-6 h-6 text-[#009886]" />,
       title: "Ethically Sourced Seasoned Timber",
       desc: "Our Burma Teak, European White Oak, and American Walnut undergo extensive kiln drying to 8-10% moisture content and cross-lamination to eliminate warping in any climate.",
     },
     {
-      icon: <Layers className="w-6 h-6 text-[#0070bc]" />,
+      icon: <Layers className="w-6 h-6 text-[#009886]" />,
       title: "Advanced Thermal Engineering",
       desc: "Multi-chambered polyamide thermal breaks prevent thermal bridging, reducing air conditioning and heating energy loads while meeting strict Passive House standards.",
     },
     {
-      icon: <ShieldCheck className="w-6 h-6 text-[#0070bc]" />,
+      icon: <ShieldCheck className="w-6 h-6 text-[#009886]" />,
       title: "German Hardware Standards",
       desc: "We exclusively integrate certified German and Italian operating hardware engineered for 200,000+ flawless operating cycles and RC2/RC3 burglar protection.",
     },
@@ -64,7 +64,7 @@ export default function AboutPage() {
     <div className="min-h-screen bg-white pt-28 pb-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Page Header */}
-        <div className="border-b border-[#e6f4fd] pb-12 mb-16">
+        <div className="border-b border-[#e6f7f5] pb-12 mb-16">
           <SectionHeading
             badge="Our Heritage & Vision"
             title="The Art & Science Of Architectural Openings"
@@ -75,7 +75,7 @@ export default function AboutPage() {
         </div>
 
         {/* Hero Architectural Image */}
-        <div className="relative w-full h-[380px] sm:h-[500px] rounded-2xl overflow-hidden border-2 border-[#e6f4fd] mb-20 bg-[#e6f4fd]">
+        <div className="relative w-full h-[380px] sm:h-[500px] rounded-2xl overflow-hidden border-2 border-[#e6f7f5] mb-20 bg-[#e6f7f5]">
           <Image
             src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=2000&q=80"
             alt="SMC Fabrication Architectural Joinery Facility"
@@ -87,14 +87,14 @@ export default function AboutPage() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
           <div className="absolute bottom-8 left-8 right-8 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
             <div className="max-w-xl">
-              <span className="text-xs uppercase font-mono tracking-[0.25em] text-[#e6f4fd] font-bold">
+              <span className="text-xs uppercase font-mono tracking-[0.25em] text-[#e6f7f5] font-bold">
                 Manufacturing Excellence
               </span>
               <h3 className="text-2xl sm:text-3xl font-extrabold text-white mt-1">
                 Where Hand-Crafted Artistry Meets Industrial Engineering
               </h3>
             </div>
-            <div className="px-4 py-2 bg-white/95 backdrop-blur-md border border-[#e6f4fd] text-xs text-black rounded-lg font-mono font-bold shadow-sm">
+            <div className="px-4 py-2 bg-white/95 backdrop-blur-md border border-[#e6f7f5] text-xs text-black rounded-lg font-mono font-bold shadow-sm">
               Certified ISO 9001 & CE Compliance
             </div>
           </div>
@@ -118,10 +118,10 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: idx * 0.1 }}
-                className="p-8 bg-white border-2 border-[#e6f4fd] hover:border-[#0070bc] rounded-2xl transition-all flex flex-col justify-between shadow-sm hover:shadow-md"
+                className="p-8 bg-white border-2 border-[#e6f7f5] hover:border-[#009886] rounded-2xl transition-all flex flex-col justify-between shadow-sm hover:shadow-md"
               >
                 <div>
-                  <div className="w-12 h-12 rounded-xl bg-[#e6f4fd] border border-[#0070bc]/30 flex items-center justify-center mb-6 shadow-xs">
+                  <div className="w-12 h-12 rounded-xl bg-[#e6f7f5] border border-[#009886]/30 flex items-center justify-center mb-6 shadow-xs">
                     {val.icon}
                   </div>
                   <h4 className="text-lg font-extrabold text-black mb-2">
@@ -137,7 +137,7 @@ export default function AboutPage() {
         </div>
 
         {/* Evolution Timeline */}
-        <div className="my-20 pt-16 border-t border-[#e6f4fd]">
+        <div className="my-20 pt-16 border-t border-[#e6f7f5]">
           <SectionHeading
             badge="Studio Evolution"
             title="Milestones in Precision Joinery"
@@ -150,10 +150,10 @@ export default function AboutPage() {
             {milestones.map((ms, mIdx) => (
               <div
                 key={mIdx}
-                className="p-6 bg-[#e6f4fd]/50 border border-[#e6f4fd] rounded-xl relative flex flex-col justify-between"
+                className="p-6 bg-[#e6f7f5]/50 border border-[#e6f7f5] rounded-xl relative flex flex-col justify-between"
               >
                 <div>
-                  <span className="text-xs font-mono text-[#0070bc] font-bold block mb-2">
+                  <span className="text-xs font-mono text-[#009886] font-bold block mb-2">
                     {ms.year}
                   </span>
                   <h4 className="text-sm font-bold uppercase tracking-wider text-black mb-2">
@@ -169,10 +169,10 @@ export default function AboutPage() {
         </div>
 
         {/* Factory Showcase & Services */}
-        <div className="my-20 bg-[#e6f4fd] border border-[#0070bc]/20 rounded-2xl p-8 sm:p-12">
+        <div className="my-20 bg-[#e6f7f5] border border-[#009886]/20 rounded-2xl p-8 sm:p-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div>
-              <span className="text-xs uppercase tracking-[0.25em] font-bold text-[#0070bc] block mb-2">
+              <span className="text-xs uppercase tracking-[0.25em] font-bold text-[#009886] block mb-2">
                 End-To-End Architectural Delivery
               </span>
               <h3 className="text-2xl sm:text-3xl font-extrabold text-black">
@@ -184,19 +184,19 @@ export default function AboutPage() {
 
               <ul className="mt-6 space-y-3 text-xs text-black font-medium">
                 <li className="flex items-center gap-2.5">
-                  <CheckCircle className="w-4 h-4 text-[#0070bc]" />
+                  <CheckCircle className="w-4 h-4 text-[#009886]" />
                   <span>CAD, BIM, and structural finite element wind load calculations</span>
                 </li>
                 <li className="flex items-center gap-2.5">
-                  <CheckCircle className="w-4 h-4 text-[#0070bc]" />
+                  <CheckCircle className="w-4 h-4 text-[#009886]" />
                   <span>3D digital twin models and mobile camera room previews</span>
                 </li>
                 <li className="flex items-center gap-2.5">
-                  <CheckCircle className="w-4 h-4 text-[#0070bc]" />
+                  <CheckCircle className="w-4 h-4 text-[#009886]" />
                   <span>On-site 3D laser scan surveying for zero-tolerance fit</span>
                 </li>
                 <li className="flex items-center gap-2.5">
-                  <CheckCircle className="w-4 h-4 text-[#0070bc]" />
+                  <CheckCircle className="w-4 h-4 text-[#009886]" />
                   <span>Certified master factory installers and lifetime maintenance support</span>
                 </li>
               </ul>
@@ -204,7 +204,7 @@ export default function AboutPage() {
               <div className="mt-8 flex items-center gap-4">
                 <Link
                   href="/request-quote"
-                  className="px-6 py-3.5 bg-[#0070bc] hover:bg-black text-white text-xs uppercase font-bold tracking-[0.18em] rounded-lg transition-all shadow-md"
+                  className="px-6 py-3.5 bg-[#009886] hover:bg-black text-white text-xs uppercase font-bold tracking-[0.18em] rounded-lg transition-all shadow-md"
                 >
                   Request Consultation
                 </Link>
@@ -217,7 +217,7 @@ export default function AboutPage() {
               </div>
             </div>
 
-            <div className="relative h-80 sm:h-96 rounded-xl overflow-hidden border border-[#0070bc]/20 bg-white">
+            <div className="relative h-80 sm:h-96 rounded-xl overflow-hidden border border-[#009886]/20 bg-white">
               <Image
                 src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80"
                 alt="Factory Joinery Station"

@@ -6,22 +6,22 @@ import { Camera, Move, Sliders, Download, AlertCircle } from "lucide-react";
 export function ARInstructions() {
   const steps = [
     {
-      icon: <Camera className="w-5 h-5 text-[#0070bc]" />,
+      icon: <Camera className="w-5 h-5 text-[#009886]" />,
       title: "1. Open Mobile Camera",
       desc: "Allow camera access to view the live video feed directly in your mobile browser without installing any app.",
     },
     {
-      icon: <Move className="w-5 h-5 text-[#0070bc]" />,
+      icon: <Move className="w-5 h-5 text-[#009886]" />,
       title: "2. Drag & Position Overlay",
       desc: "Drag the transparent door or window overlay with your finger to align it over your wall opening or entrance.",
     },
     {
-      icon: <Sliders className="w-5 h-5 text-[#0070bc]" />,
+      icon: <Sliders className="w-5 h-5 text-[#009886]" />,
       title: "3. Scale & Adjust Finishes",
       desc: "Use the size slider or pinch-to-zoom to match aperture proportions. Switch architectural finishes in real time.",
     },
     {
-      icon: <Download className="w-5 h-5 text-[#0070bc]" />,
+      icon: <Download className="w-5 h-5 text-[#009886]" />,
       title: "4. Capture & Send For Quote",
       desc: "Save a snapshot with watermark to share with your architect or submit with your fabrication estimate request.",
     },
@@ -33,9 +33,9 @@ export function ARInstructions() {
         {steps.map((step, idx) => (
           <div
             key={idx}
-            className="p-3 bg-[#e6f4fd]/50 border border-[#e6f4fd] rounded-xl flex items-start gap-3"
+            className="p-3 bg-[#e6f7f5]/50 border border-[#e6f7f5] rounded-xl flex items-start gap-3"
           >
-            <div className="p-2 bg-white rounded-lg shrink-0 border border-[#e6f4fd] shadow-xs">
+            <div className="p-2 bg-white rounded-lg shrink-0 border border-[#e6f7f5] shadow-xs">
               {step.icon}
             </div>
             <div>
@@ -51,8 +51,8 @@ export function ARInstructions() {
       </div>
 
       {/* Engineering Disclaimer */}
-      <div className="p-3 bg-[#e6f4fd] border border-[#0070bc]/30 rounded-xl flex items-start gap-2.5">
-        <AlertCircle className="w-4 h-4 text-[#0070bc] shrink-0 mt-0.5" />
+      <div className="p-3 bg-[#e6f7f5] border border-[#009886]/30 rounded-xl flex items-start gap-2.5">
+        <AlertCircle className="w-4 h-4 text-[#009886] shrink-0 mt-0.5" />
         <div className="text-[11px] text-black/80 leading-relaxed font-medium">
           <strong>Visual Reference Note:</strong> The 2D room camera preview is an interactive manual positioning tool designed for aesthetic and proportion reference. It does not automatically track surfaces in 3D. Final structural fabrication requires on-site millimeter laser survey verification by our engineering team.
         </div>

@@ -1,22 +1,19 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect, useRef, useCallback, Suspense } from "react";
+import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import {
   Camera,
-  X,
   RotateCcw,
   Download,
   Sliders,
   SwitchCamera,
-  AlertCircle,
   Check,
   FlipHorizontal,
   Upload,
-  Image as ImageIcon,
   ChevronDown,
-  RefreshCw,
   Sun,
   Moon,
   Sparkles,
@@ -25,37 +22,32 @@ import {
   QrCode,
   FileText,
   Trash2,
+  Share2,
 } from "lucide-react";
 import { Product, ColorFinishOption } from "@/types/product";
 import { PRODUCTS_DATA } from "@/data/products";
 import { cn } from "@/lib/utils";
 import { DesktopQRCodeModal } from "@/components/ar/DesktopQRCodeModal";
 
-interface CameraProductPreviewProps {
-  isOpen: boolean;
-  onClose: () => void;
-  product: Product;
-  selectedFinish?: ColorFinishOption;
-}
+function VisualizerContent() {
+  const searchParams = useSearchParams();
+  const productParam = searchParams.get("product") || searchParams.get("preview");
 
-export function CameraProductPreview({
-  isOpen,
-  onClose,
-  product: initialProduct,
-  selectedFinish: initialFinish,
-}: CameraProductPreviewProps) {
-  // Active product & color finish selection
+  // Determine initial product from query param or default to first product
+  const initialProduct =
+    PRODUCTS_DATA.find(
+      (p) =>
+        p.slug === productParam ||
+        p.id === productParam ||
+        p.sku.toLowerCase() === (productParam || "").toLowerCase()
+    ) || PRODUCTS_DATA[0];
+
+  // Active product selection
   const [currentProduct, setCurrentProduct] = useState<Product>(initialProduct);
-  const [selectedFinishIndex, setSelectedFinishIndex] = useState<number>(() => {
-    if (initialFinish && initialProduct.finishes) {
-      const idx = initialProduct.finishes.findIndex((f) => f.id === initialFinish.id);
-      return idx >= 0 ? idx : 0;
-    }
-    return 0;
-  });
+  const [selectedFinishIndex, setSelectedFinishIndex] = useState<number>(0);
   const [activeVariantIndex, setActiveVariantIndex] = useState<number>(0);
 
-  // Studio / Backdrop lighting state
+  // Studio lighting mode
   const [lightingMode, setLightingMode] = useState<"day" | "warm" | "night">("day");
   const [projectCode, setProjectCode] = useState<string>(
     `PROJECT-SMC-${initialProduct.sku.replace("SMC-", "")}`
@@ -64,13 +56,9 @@ export function CameraProductPreview({
   // Camera stream state
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [isCameraLoading, setIsCameraLoading] = useState(false);
-  const [cameraPermission, setCameraPermission] = useState<
-    "idle" | "granted" | "denied" | "unsupported"
-  >("idle");
-  const [cameraError, setCameraError] = useState<string | null>(null);
   const [facingMode, setFacingMode] = useState<"environment" | "user">("environment");
   const [hasMultipleCameras, setHasMultipleCameras] = useState(false);
-  const [useFallbackRoom, setUseFallbackRoom] = useState(true); // Default to Studio Backdrop on Desktop
+  const [useFallbackRoom, setUseFallbackRoom] = useState(true);
   const [customRoomImage, setCustomRoomImage] = useState<string | null>(null);
 
   // Overlay transformation state
@@ -86,8 +74,7 @@ export function CameraProductPreview({
   const [initialPinchDist, setInitialPinchDist] = useState<number | null>(null);
   const [initialPinchScale, setInitialPinchScale] = useState<number>(1.0);
 
-  // UI Drawer / Control states
-  const [showControlsMobile, setShowControlsMobile] = useState(false);
+  // UI state
   const [showProductDropdown, setShowProductDropdown] = useState(false);
   const [screenshotCaptured, setScreenshotCaptured] = useState(false);
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
@@ -98,18 +85,23 @@ export function CameraProductPreview({
   const overlayRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Update product when prop changes
+  // Synchronize product when query param changes
   useEffect(() => {
-    setCurrentProduct(initialProduct);
-    if (initialFinish && initialProduct.finishes) {
-      const idx = initialProduct.finishes.findIndex((f) => f.id === initialFinish.id);
-      setSelectedFinishIndex(idx >= 0 ? idx : 0);
-    } else {
-      setSelectedFinishIndex(0);
+    if (productParam) {
+      const found = PRODUCTS_DATA.find(
+        (p) =>
+          p.slug === productParam ||
+          p.id === productParam ||
+          p.sku.toLowerCase() === productParam.toLowerCase()
+      );
+      if (found) {
+        setCurrentProduct(found);
+        setSelectedFinishIndex(0);
+        setActiveVariantIndex(0);
+        setProjectCode(`PROJECT-SMC-${found.sku.replace("SMC-", "")}`);
+      }
     }
-    setActiveVariantIndex(0);
-    setProjectCode(`PROJECT-SMC-${initialProduct.sku.replace("SMC-", "")}`);
-  }, [initialProduct, initialFinish]);
+  }, [productParam]);
 
   // Color selection handler
   const handleSelectFinish = (fIdx: number) => {
@@ -172,15 +164,12 @@ export function CameraProductPreview({
     }
   }, [stream]);
 
-  // Initialize camera stream
+  // Initialize live camera
   const startCamera = useCallback(async () => {
     setIsCameraLoading(true);
-    setCameraError(null);
     stopCamera();
 
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      setCameraPermission("unsupported");
-      setCameraError("Camera API is not supported on this browser.");
       setIsCameraLoading(false);
       setUseFallbackRoom(true);
       return;
@@ -198,7 +187,6 @@ export function CameraProductPreview({
 
       const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
       setStream(mediaStream);
-      setCameraPermission("granted");
       setUseFallbackRoom(false);
 
       if (videoRef.current) {
@@ -206,38 +194,24 @@ export function CameraProductPreview({
         await videoRef.current.play().catch(() => {});
       }
     } catch (err: unknown) {
-      console.warn("Camera start failed, activating studio visualizer", err);
-      const error = err as Error;
-      if (error.name === "NotAllowedError" || error.name === "PermissionDeniedError") {
-        setCameraPermission("denied");
-        setCameraError("Camera permission was denied. Switched to Studio Visualizer.");
-      } else {
-        setCameraPermission("unsupported");
-        setCameraError("Camera is unavailable. Using Studio Visualizer.");
-      }
+      console.warn("Camera start failed, falling back to studio", err);
       setUseFallbackRoom(true);
     } finally {
       setIsCameraLoading(false);
     }
   }, [facingMode, stopCamera]);
 
-  // Switch between front/back cameras
   const toggleFacingMode = () => {
     const nextMode = facingMode === "environment" ? "user" : "environment";
     setFacingMode(nextMode);
   };
 
-  // Stop camera when modal closes or unmounts
   useEffect(() => {
-    if (!isOpen) {
-      stopCamera();
-    }
     return () => {
       stopCamera();
     };
-  }, [isOpen, stopCamera]);
+  }, [stopCamera]);
 
-  // Reset overlay transforms
   const handleReset = () => {
     setPosition({ x: 0, y: 0 });
     setScale(1.0);
@@ -246,7 +220,6 @@ export function CameraProductPreview({
     setIsFlipped(false);
   };
 
-  // Mouse & touch drag positioning handlers
   const handlePointerDown = (clientX: number, clientY: number) => {
     setIsDragging(true);
     setDragStart({
@@ -268,7 +241,6 @@ export function CameraProductPreview({
     setInitialPinchDist(null);
   };
 
-  // Pinch-to-zoom for touch devices
   const handleTouchMove = (e: React.TouchEvent) => {
     if (e.touches.length === 2) {
       const touch1 = e.touches[0];
@@ -291,14 +263,12 @@ export function CameraProductPreview({
     }
   };
 
-  // Mouse wheel zoom on overlay
   const handleWheel = (e: React.WheelEvent) => {
     e.stopPropagation();
     const delta = e.deltaY > 0 ? -0.05 : 0.05;
     setScale((prev) => Math.min(Math.max(prev + delta, 0.4), 2.5));
   };
 
-  // Custom user room image upload handler
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -314,7 +284,6 @@ export function CameraProductPreview({
     }
   };
 
-  // Drag & drop image upload on canvas
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
@@ -333,7 +302,6 @@ export function CameraProductPreview({
     }
   };
 
-  // Composite snapshot photo download
   const handleCaptureScreenshot = async () => {
     const container = containerRef.current;
     if (!container) return;
@@ -347,7 +315,6 @@ export function CameraProductPreview({
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
-      // 1. Draw camera video frame or backdrop image
       if (videoRef.current && stream && !useFallbackRoom) {
         ctx.drawImage(videoRef.current, 0, 0, width, height);
       } else if (customRoomImage) {
@@ -361,12 +328,15 @@ export function CameraProductPreview({
         });
         ctx.drawImage(bgImg, 0, 0, width, height);
       } else {
-        // Studio Background
-        ctx.fillStyle = lightingMode === "night" ? "#0f172a" : lightingMode === "warm" ? "#fef8f0" : "#ffffff";
+        ctx.fillStyle =
+          lightingMode === "night"
+            ? "#0f172a"
+            : lightingMode === "warm"
+            ? "#fef8f0"
+            : "#ffffff";
         ctx.fillRect(0, 0, width, height);
       }
 
-      // 2. Draw product PNG overlay
       const overlayImg = new window.Image();
       overlayImg.crossOrigin = "anonymous";
       overlayImg.src = overlayPngUrl;
@@ -399,7 +369,6 @@ export function CameraProductPreview({
       );
       ctx.restore();
 
-      // 3. Draw Watermark & Product Specs Card
       ctx.fillStyle = "rgba(0, 0, 0, 0.85)";
       ctx.fillRect(20, height - 80, Math.min(width - 40, 480), 64);
 
@@ -407,12 +376,12 @@ export function CameraProductPreview({
       ctx.font = "bold 13px system-ui, sans-serif";
       const activeColorName = currentProduct.finishes?.[selectedFinishIndex]?.name || "";
       ctx.fillText(
-        `SMC FABRICATION • ${currentProduct.name}${activeColorName ? ` (${activeColorName})` : ""}`,
+        `SMC FABRICATIONS • ${currentProduct.name}${activeColorName ? ` (${activeColorName})` : ""}`,
         32,
         height - 54
       );
 
-      ctx.fillStyle = "#93c5fd";
+      ctx.fillStyle = "#a7f3d0";
       ctx.font = "11px monospace";
       ctx.fillText(
         `${currentProduct.sku} | ${currentProduct.dimensions.standardWidthMm}×${currentProduct.dimensions.standardHeightMm}mm | Ref: ${projectCode || "SMC-STUDIO"}`,
@@ -420,7 +389,6 @@ export function CameraProductPreview({
         height - 34
       );
 
-      // Trigger automatic PNG download
       const dataUrl = canvas.toDataURL("image/png");
       const a = document.createElement("a");
       a.href = dataUrl;
@@ -434,17 +402,15 @@ export function CameraProductPreview({
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-    <AnimatePresence>
-      <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-0 lg:p-4 font-sans select-none overflow-hidden touch-none">
+    <div className="min-h-screen bg-[#f8fbfe] pt-24 pb-16 font-sans select-none">
+      <div className="max-w-[1560px] mx-auto px-3 sm:px-6 lg:px-8">
         
-        {/* Main Desktop Studio Container Modal */}
-        <div className="relative w-full h-full lg:max-w-7xl lg:max-h-[92vh] bg-white rounded-none lg:rounded-3xl shadow-2xl flex flex-col lg:flex-row overflow-hidden border border-[#e6f7f5]">
+        {/* Studio Visualizer Main 2-Column Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           
           {/* ======================================================== */}
-          {/* LEFT: LARGE INTERACTIVE VISUALIZER CANVAS */}
+          {/* LEFT: LARGE INTERACTIVE VISUALIZER CANVAS (STICKY) */}
           {/* ======================================================== */}
           <div
             ref={containerRef}
@@ -455,7 +421,7 @@ export function CameraProductPreview({
             onTouchMove={handleTouchMove}
             onTouchEnd={handlePointerUp}
             className={cn(
-              "relative flex-1 w-full h-[55vh] lg:h-full overflow-hidden transition-colors duration-500",
+              "relative lg:col-span-7 xl:col-span-8 w-full h-[520px] sm:h-[600px] lg:h-[calc(100vh-140px)] min-h-[520px] rounded-3xl overflow-hidden border border-[#e6f7f5] shadow-xl transition-colors duration-500 lg:sticky lg:top-24",
               lightingMode === "night"
                 ? "bg-[#0b0f19]"
                 : lightingMode === "warm"
@@ -466,7 +432,7 @@ export function CameraProductPreview({
             {/* Subtle Studio Grid lines */}
             <div className="absolute inset-0 bg-[radial-gradient(#0098860e_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none opacity-80" />
 
-            {/* Live Camera Stream Video (if enabled) */}
+            {/* Live Camera Stream Video */}
             <video
               ref={videoRef}
               autoPlay
@@ -492,24 +458,23 @@ export function CameraProductPreview({
             )}
 
             {/* Canvas Top Bar: Render Tag, Dimension Pills, Studio Light Switch */}
-            <div className="absolute top-3 left-3 right-3 z-30 flex items-center justify-between pointer-events-none">
+            <div className="absolute top-3.5 left-3.5 right-3.5 z-30 flex items-center justify-between pointer-events-none">
               <div className="flex items-center gap-2 pointer-events-auto flex-wrap">
                 {/* Instant Browser Render Badge */}
-                <div className="px-3 py-1.5 bg-white/95 backdrop-blur-md rounded-xl border border-[#e6f7f5] shadow-sm flex items-center gap-2 text-xs font-bold text-black">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="hidden sm:inline">Instant Browser Render</span>
-                  <span className="sm:hidden">Live Studio</span>
+                <div className="px-3.5 py-1.5 bg-white/95 backdrop-blur-md rounded-xl border border-[#e6f7f5] shadow-xs flex items-center gap-2 text-xs font-bold text-black">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#009886] animate-pulse" />
+                  <span>Instant Browser Render</span>
                 </div>
 
                 {/* Dimension Tag */}
-                <div className="px-3 py-1.5 bg-white/95 backdrop-blur-md rounded-xl border border-[#e6f7f5] shadow-sm text-xs font-mono font-bold text-[#009886]">
+                <div className="px-3.5 py-1.5 bg-white/95 backdrop-blur-md rounded-xl border border-[#e6f7f5] shadow-xs text-xs font-mono font-bold text-[#009886]">
                   W: {(currentProduct.dimensions.standardWidthMm / 1000).toFixed(1)}m × H:{" "}
                   {(currentProduct.dimensions.standardHeightMm / 1000).toFixed(1)}m
                 </div>
               </div>
 
               {/* Lighting Theme Toggles (Day / Warm / Night) */}
-              <div className="flex items-center gap-1 p-1 bg-white/95 backdrop-blur-md rounded-xl border border-[#e6f7f5] shadow-sm pointer-events-auto">
+              <div className="flex items-center gap-1 p-1 bg-white/95 backdrop-blur-md rounded-xl border border-[#e6f7f5] shadow-xs pointer-events-auto">
                 <button
                   onClick={() => setLightingMode("day")}
                   className={cn(
@@ -520,7 +485,7 @@ export function CameraProductPreview({
                   )}
                   title="Studio Daylight"
                 >
-                  <Sun className="w-3.5 h-3.5" />
+                  <Sun className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => setLightingMode("warm")}
@@ -532,7 +497,7 @@ export function CameraProductPreview({
                   )}
                   title="Warm Sunset Lighting"
                 >
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <Sparkles className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => setLightingMode("night")}
@@ -544,18 +509,17 @@ export function CameraProductPreview({
                   )}
                   title="Night Studio Glow"
                 >
-                  <Moon className="w-3.5 h-3.5" />
+                  <Moon className="w-4 h-4" />
                 </button>
               </div>
             </div>
 
             {/* Floating Canvas Quick Controls (Bottom Left of Canvas) */}
-            <div className="absolute bottom-3 left-3 z-30 flex items-center gap-1.5 pointer-events-auto bg-white/95 backdrop-blur-md p-1.5 rounded-xl border border-[#e6f7f5] shadow-md">
-              {/* Flip */}
+            <div className="absolute bottom-3.5 left-3.5 z-30 flex items-center gap-1.5 pointer-events-auto bg-white/95 backdrop-blur-md p-1.5 rounded-xl border border-[#e6f7f5] shadow-md">
               <button
                 onClick={() => setIsFlipped(!isFlipped)}
                 className={cn(
-                  "p-2 rounded-lg transition-colors cursor-pointer text-xs font-semibold flex items-center gap-1",
+                  "p-2 rounded-lg transition-colors cursor-pointer text-xs font-semibold flex items-center gap-1.5",
                   isFlipped ? "bg-[#009886] text-white" : "hover:bg-black/5 text-black"
                 )}
                 title="Flip Direction"
@@ -564,17 +528,15 @@ export function CameraProductPreview({
                 <span className="text-[11px] hidden sm:inline">Flip</span>
               </button>
 
-              {/* Reset */}
               <button
                 onClick={handleReset}
-                className="p-2 hover:bg-black/5 text-black rounded-lg transition-colors cursor-pointer text-xs font-semibold flex items-center gap-1"
+                className="p-2 hover:bg-black/5 text-black rounded-lg transition-colors cursor-pointer text-xs font-semibold flex items-center gap-1.5"
                 title="Reset Position & Scale"
               >
                 <RotateCcw className="w-4 h-4 text-[#009886]" />
                 <span className="text-[11px] hidden sm:inline">Reset</span>
               </button>
 
-              {/* Zoom Out */}
               <button
                 onClick={() => setScale((prev) => Math.max(prev - 0.1, 0.4))}
                 className="p-2 hover:bg-black/5 text-black rounded-lg transition-colors cursor-pointer"
@@ -583,7 +545,6 @@ export function CameraProductPreview({
                 <ZoomOut className="w-4 h-4" />
               </button>
 
-              {/* Zoom In */}
               <button
                 onClick={() => setScale((prev) => Math.min(prev + 0.1, 2.5))}
                 className="p-2 hover:bg-black/5 text-black rounded-lg transition-colors cursor-pointer"
@@ -592,7 +553,6 @@ export function CameraProductPreview({
                 <ZoomIn className="w-4 h-4" />
               </button>
 
-              {/* Live WebCam switch */}
               {hasMultipleCameras && (
                 <button
                   onClick={toggleFacingMode}
@@ -604,7 +564,7 @@ export function CameraProductPreview({
               )}
             </div>
 
-            {/* DRAGGABLE, RESIZABLE, ROTATABLE TRANSPARENT PNG OVERLAY */}
+            {/* DRAGGABLE, RESIZABLE, ROTATABLE OVERLAY */}
             <div
               ref={overlayRef}
               onMouseDown={(e) => handlePointerDown(e.clientX, e.clientY)}
@@ -622,7 +582,7 @@ export function CameraProductPreview({
               }}
               className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 cursor-grab active:cursor-grabbing z-20 transition-opacity duration-150"
             >
-              <div className="relative w-64 sm:w-80 md:w-96 aspect-[1/2] max-h-[70vh] flex items-center justify-center pointer-events-auto">
+              <div className="relative w-64 sm:w-80 md:w-96 aspect-[1/2] max-h-[72vh] flex items-center justify-center pointer-events-auto">
                 <img
                   src={overlayPngUrl}
                   alt={currentProduct.name}
@@ -630,7 +590,7 @@ export function CameraProductPreview({
                     "w-full h-full object-contain filter",
                     lightingMode === "night"
                       ? "drop-shadow-[0_20px_40px_rgba(0,0,0,0.9)] brightness-90"
-                      : "drop-shadow-[0_15px_30px_rgba(0,0,0,0.3)]"
+                      : "drop-shadow-[0_15px_30px_rgba(0,0,0,0.25)]"
                   )}
                   draggable={false}
                 />
@@ -641,20 +601,18 @@ export function CameraProductPreview({
               </div>
             </div>
 
-            {/* Drag instructions hint on canvas */}
-            <div className="absolute bottom-3 right-3 z-20 pointer-events-none text-[10px] font-mono font-bold text-black/40 bg-white/70 backdrop-blur-sm px-2.5 py-1 rounded-lg border border-black/5 hidden md:block">
+            <div className="absolute bottom-3.5 right-3.5 z-20 pointer-events-none text-[10px] font-mono font-bold text-black/40 bg-white/70 backdrop-blur-sm px-2.5 py-1 rounded-lg border border-black/5 hidden md:block">
               DRAG TO MOVE • WHEEL TO SCALE
             </div>
           </div>
 
           {/* ======================================================== */}
-          {/* RIGHT: DESKTOP STUDIO SIDEBAR & CONTROLS */}
+          {/* RIGHT: DESKTOP STUDIO CONTROLS (NATURAL PAGE SCROLL) */}
           {/* ======================================================== */}
-          <div className="w-full lg:w-[420px] xl:w-[460px] bg-[#f8fbfe] border-t lg:border-t-0 lg:border-l border-[#e6f7f5] flex flex-col h-[45vh] lg:h-full overflow-y-auto z-30 shadow-2xl p-4 sm:p-5 gap-4">
+          <div className="lg:col-span-5 xl:col-span-4 flex flex-col gap-4">
             
-            {/* Header: Product Switcher & Top Actions */}
+            {/* Header: Product Switcher & Phone Sync */}
             <div className="flex items-center justify-between gap-2 pb-3 border-b border-[#e6f7f5]">
-              {/* Product Switcher Dropdown */}
               <div className="relative flex-1">
                 <button
                   onClick={() => setShowProductDropdown(!showProductDropdown)}
@@ -671,11 +629,10 @@ export function CameraProductPreview({
                   <ChevronDown className="w-4 h-4 text-black/50 shrink-0" />
                 </button>
 
-                {/* Dropdown Menu */}
                 {showProductDropdown && (
                   <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-[#e6f7f5] rounded-xl shadow-2xl overflow-y-auto max-h-72 z-50 p-1.5">
                     <div className="px-3 py-1.5 text-[10px] uppercase font-bold text-black/50 tracking-wider">
-                      Switch Product Model
+                      Switch UPVC Model
                     </div>
                     {PRODUCTS_DATA.map((p) => (
                       <button
@@ -704,22 +661,12 @@ export function CameraProductPreview({
                 )}
               </div>
 
-              {/* QR Mobile Sync button */}
               <button
                 onClick={() => setIsQRModalOpen(true)}
                 className="p-2.5 bg-white hover:bg-neutral-100 text-black rounded-xl border border-[#e6f7f5] shadow-xs transition-colors cursor-pointer"
-                title="Scan to Open on Phone Camera"
+                title="Scan with Phone Camera"
               >
                 <QrCode className="w-4 h-4 text-[#009886]" />
-              </button>
-
-              {/* Close Button */}
-              <button
-                onClick={onClose}
-                className="p-2.5 bg-white hover:bg-red-50 text-black hover:text-red-600 rounded-xl border border-[#e6f7f5] shadow-xs transition-colors cursor-pointer"
-                aria-label="Close studio visualizer"
-              >
-                <X className="w-4 h-4" />
               </button>
             </div>
 
@@ -737,14 +684,13 @@ export function CameraProductPreview({
                 </span>
               </div>
 
-              {/* Upload Drop Zone */}
               <div
                 onClick={() => fileInputRef.current?.click()}
                 className={cn(
                   "border-2 border-dashed rounded-xl p-4 flex flex-col items-center justify-center text-center cursor-pointer transition-all",
                   customRoomImage
                     ? "border-[#009886] bg-[#e6f7f5]/40"
-                    : "border-neutral-200 hover:border-[#009886] hover:bg-[#f0f8ff]"
+                    : "border-neutral-200 hover:border-[#009886] hover:bg-[#f6fbfb]"
                 )}
               >
                 <div className="p-2.5 bg-[#e6f7f5] text-[#009886] rounded-xl mb-2">
@@ -765,7 +711,6 @@ export function CameraProductPreview({
                 />
               </div>
 
-              {/* Custom Image Status & Reset to White */}
               {customRoomImage && (
                 <div className="flex items-center justify-between text-xs pt-1">
                   <span className="text-[11px] text-emerald-700 font-semibold flex items-center gap-1">
@@ -782,7 +727,6 @@ export function CameraProductPreview({
                 </div>
               )}
 
-              {/* Project Reference Code Input */}
               <div className="pt-2 border-t border-[#e6f7f5] flex items-center gap-2">
                 <span className="text-[10px] uppercase font-mono font-bold text-black/50 shrink-0">
                   Ref Code:
@@ -797,7 +741,7 @@ export function CameraProductPreview({
               </div>
             </div>
 
-            {/* 2. TRENDING SWATCHES / FINISHES CARD */}
+            {/* 2. TRENDING SWATCHES CARD */}
             <div className="bg-white rounded-2xl border border-[#e6f7f5] p-4 shadow-xs flex flex-col gap-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
@@ -811,7 +755,6 @@ export function CameraProductPreview({
                 </span>
               </div>
 
-              {/* Swatch Grid (Visual Tiles) */}
               <div className="grid grid-cols-2 gap-2.5">
                 {currentProduct.finishes.map((finish, fIdx) => (
                   <button
@@ -824,7 +767,6 @@ export function CameraProductPreview({
                         : "border-[#e6f7f5] hover:border-[#009886]/40 bg-white"
                     )}
                   >
-                    {/* Big Color Block */}
                     <div
                       className="w-full h-12 rounded-lg border border-black/10 shadow-inner flex items-center justify-center relative"
                       style={{ backgroundColor: finish.hex }}
@@ -836,7 +778,6 @@ export function CameraProductPreview({
                       )}
                     </div>
 
-                    {/* Swatch Name */}
                     <div>
                       <h6 className="text-[11px] font-bold text-black truncate">
                         {finish.name}
@@ -857,7 +798,6 @@ export function CameraProductPreview({
                 Dimension & Overlay Adjustments
               </span>
 
-              {/* Size Slider */}
               <div className="flex items-center gap-2">
                 <span className="text-[10px] uppercase font-mono text-black/60 font-bold w-14 shrink-0">
                   Size
@@ -876,7 +816,6 @@ export function CameraProductPreview({
                 </span>
               </div>
 
-              {/* Tilt Slider */}
               <div className="flex items-center gap-2">
                 <span className="text-[10px] uppercase font-mono text-black/60 font-bold w-14 shrink-0">
                   Tilt
@@ -895,7 +834,6 @@ export function CameraProductPreview({
                 </span>
               </div>
 
-              {/* Opacity Slider */}
               <div className="flex items-center gap-2">
                 <span className="text-[10px] uppercase font-mono text-black/60 font-bold w-14 shrink-0">
                   Opacity
@@ -915,11 +853,11 @@ export function CameraProductPreview({
               </div>
             </div>
 
-            {/* 4. ACTIONS: SAVE SNAPSHOT & REQUEST QUOTE */}
+            {/* 4. ACTIONS */}
             <div className="mt-auto pt-2 flex flex-col gap-2">
               <button
                 onClick={handleCaptureScreenshot}
-                className="w-full py-3 bg-[#009886] hover:bg-black text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full py-3.5 bg-[#009886] hover:bg-black text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Download className="w-4 h-4 text-white" />
                 <span>
@@ -929,7 +867,6 @@ export function CameraProductPreview({
 
               <Link
                 href={`/request-quote?product=${encodeURIComponent(currentProduct.slug)}`}
-                onClick={onClose}
                 className="w-full py-2.5 bg-white hover:bg-[#e6f7f5] text-[#009886] border border-[#009886]/30 text-xs font-bold uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2 text-center"
               >
                 <FileText className="w-3.5 h-3.5" />
@@ -939,7 +876,6 @@ export function CameraProductPreview({
           </div>
         </div>
 
-        {/* QR Code Modal Sync for Mobile Testing */}
         <DesktopQRCodeModal
           isOpen={isQRModalOpen}
           onClose={() => setIsQRModalOpen(false)}
@@ -950,6 +886,25 @@ export function CameraProductPreview({
           }}
         />
       </div>
-    </AnimatePresence>
+    </div>
+  );
+}
+
+export default function VisualizerPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#f8fbfe] pt-28 flex items-center justify-center">
+          <div className="text-center font-sans">
+            <span className="w-3 h-3 rounded-full bg-[#009886] inline-block animate-ping mb-3" />
+            <p className="text-xs font-mono font-bold text-[#009886] uppercase tracking-wider">
+              Loading Studio Visualizer...
+            </p>
+          </div>
+        </div>
+      }
+    >
+      <VisualizerContent />
+    </Suspense>
   );
 }

@@ -3,22 +3,33 @@
 @layer base {
   :root {
     --bg-white: #ffffff;
-    --color-main: #0070bc;
+    --color-main: #009886;
     --color-black: #000000;
-    --color-light: #e6f4fd;
+    --color-light: #e6f7f5;
     
     --background: #ffffff;
     --foreground: #000000;
-    --primary: #0070bc;
-    --accent: #e6f4fd;
+    --primary: #009886;
+    --accent: #e6f7f5;
   }
 
   html {
     scroll-behavior: smooth;
     background-color: #ffffff;
     color: #000000;
+    font-family: var(--font-sora), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  body, button, input, textarea, select {
+    font-family: var(--font-sora), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-sora), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-weight: 800 !important;
+    letter-spacing: -0.025em;
   }
 
   body {
@@ -29,7 +40,7 @@
   }
 
   ::selection {
-    background-color: #0070bc;
+    background-color: #009886;
     color: #ffffff;
   }
 
@@ -42,11 +53,11 @@
     background: #ffffff;
   }
   ::-webkit-scrollbar-thumb {
-    background: #0070bc;
+    background: #009886;
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #005088;
+    background: #007c6d;
   }
 }
 
@@ -56,7 +67,7 @@
 }
 
 .bg-brand-main {
-  background-color: #0070bc;
+  background-color: #009886;
 }
 
 .bg-brand-black {
@@ -64,7 +75,7 @@
 }
 
 .bg-brand-light {
-  background-color: #e6f4fd;
+  background-color: #e6f7f5;
 }
 
 .text-brand-white {
@@ -72,7 +83,7 @@
 }
 
 .text-brand-main {
-  color: #0070bc;
+  color: #009886;
 }
 
 .text-brand-black {
@@ -80,15 +91,15 @@
 }
 
 .text-brand-light {
-  color: #e6f4fd;
+  color: #e6f7f5;
 }
 
 .border-brand-main {
-  border-color: #0070bc;
+  border-color: #009886;
 }
 
 .border-brand-light {
-  border-color: #e6f4fd;
+  border-color: #e6f7f5;
 }
 
 .border-brand-black {

@@ -103,7 +103,7 @@ function ProductCatalogueContent() {
     <div className="min-h-screen bg-white pt-28 pb-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Page Header */}
-        <div className="border-b border-[#e6f4fd] pb-8 mb-8">
+        <div className="border-b border-[#e6f7f5] pb-8 mb-8">
           <SectionHeading
             badge="Architectural Catalogue"
             title="Engineered Doors & Windows Portfolio"
@@ -140,8 +140,8 @@ function ProductCatalogueContent() {
           </div>
         ) : (
           /* Empty State */
-          <div className="py-20 text-center bg-white border-2 border-[#e6f4fd] rounded-xl p-8 max-w-xl mx-auto space-y-4 shadow-sm">
-            <div className="w-16 h-16 rounded-full bg-[#e6f4fd] border border-[#0070bc] flex items-center justify-center mx-auto text-[#0070bc]">
+          <div className="py-20 text-center bg-white border-2 border-[#e6f7f5] rounded-xl p-8 max-w-xl mx-auto space-y-4 shadow-sm">
+            <div className="w-16 h-16 rounded-full bg-[#e6f7f5] border border-[#009886] flex items-center justify-center mx-auto text-[#009886]">
               <SearchX className="w-8 h-8" />
             </div>
             <h3 className="text-xl font-extrabold text-black">No Matching Systems Found</h3>
@@ -150,7 +150,7 @@ function ProductCatalogueContent() {
             </p>
             <button
               onClick={handleResetFilters}
-              className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#0070bc] hover:bg-black text-white text-xs uppercase tracking-wider font-bold rounded-lg transition-colors shadow-sm"
+              className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#009886] hover:bg-black text-white text-xs uppercase tracking-wider font-bold rounded-lg transition-colors shadow-sm"
             >
               <RotateCcw className="w-3.5 h-3.5 text-white" />
               <span>Clear All Filters</span>

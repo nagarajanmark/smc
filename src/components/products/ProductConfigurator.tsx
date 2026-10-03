@@ -84,12 +84,12 @@ export function ProductConfigurator({
   };
 
   return (
-    <div className="bg-white border-2 border-[#e6f4fd] rounded-xl p-6 sm:p-8 space-y-8 shadow-sm">
+    <div className="bg-white border-2 border-[#e6f7f5] rounded-xl p-6 sm:p-8 space-y-8 shadow-sm">
       {/* Header */}
       <div>
         <div className="flex items-center gap-2 mb-1">
-          <Sliders className="w-4 h-4 text-[#0070bc]" />
-          <span className="text-xs uppercase tracking-[0.2em] font-bold text-[#0070bc]">
+          <Sliders className="w-4 h-4 text-[#009886]" />
+          <span className="text-xs uppercase tracking-[0.2em] font-bold text-[#009886]">
             Bespoke Product Configuration
           </span>
         </div>
@@ -105,7 +105,7 @@ export function ProductConfigurator({
       <div className="space-y-3">
         <label className="text-xs font-bold uppercase tracking-wider text-black flex items-center justify-between">
           <span>1. Architectural Finish</span>
-          <span className="text-[#0070bc] font-bold text-xs">{selectedFinish.name}</span>
+          <span className="text-[#009886] font-bold text-xs">{selectedFinish.name}</span>
         </label>
         <div className="grid grid-cols-2 sm:grid-cols-2 gap-3">
           {product.finishes.map((fin) => {
@@ -118,8 +118,8 @@ export function ProductConfigurator({
                 className={cn(
                   "p-3 rounded-lg border text-left flex items-start gap-3 transition-all",
                   isSelected
-                    ? "bg-[#e6f4fd] border-[#0070bc] ring-2 ring-[#0070bc]/30"
-                    : "bg-white border-[#e6f4fd] hover:border-[#0070bc]"
+                    ? "bg-[#e6f7f5] border-[#009886] ring-2 ring-[#009886]/30"
+                    : "bg-white border-[#e6f7f5] hover:border-[#009886]"
                 )}
               >
                 <span
@@ -134,7 +134,7 @@ export function ProductConfigurator({
                     {fin.textureLabel}
                   </div>
                 </div>
-                {isSelected && <Check className="w-4 h-4 text-[#0070bc] shrink-0" />}
+                {isSelected && <Check className="w-4 h-4 text-[#009886] shrink-0" />}
               </button>
             );
           })}
@@ -146,7 +146,7 @@ export function ProductConfigurator({
         <div className="space-y-3">
           <label className="text-xs font-bold uppercase tracking-wider text-black flex items-center justify-between">
             <span>2. Frame Profile & Depth</span>
-            <span className="text-[#0070bc] font-bold text-xs">{selectedFrame.name}</span>
+            <span className="text-[#009886] font-bold text-xs">{selectedFrame.name}</span>
           </label>
           <div className="space-y-2">
             {product.frameOptions.map((frm) => {
@@ -159,8 +159,8 @@ export function ProductConfigurator({
                   className={cn(
                     "w-full p-3 rounded-lg border text-left flex items-center justify-between gap-3 transition-all",
                     isSelected
-                      ? "bg-[#e6f4fd] border-[#0070bc]"
-                      : "bg-white border-[#e6f4fd] hover:border-[#0070bc]"
+                      ? "bg-[#e6f7f5] border-[#009886]"
+                      : "bg-white border-[#e6f7f5] hover:border-[#009886]"
                   )}
                 >
                   <div>
@@ -168,7 +168,7 @@ export function ProductConfigurator({
                     <div className="text-[11px] text-black/70 mt-0.5">{frm.description}</div>
                   </div>
                   <div className="text-right shrink-0">
-                    <span className="text-xs font-mono font-bold text-[#0070bc]">{frm.depthMm}mm</span>
+                    <span className="text-xs font-mono font-bold text-[#009886]">{frm.depthMm}mm</span>
                     <span className="text-[10px] text-black/60 block">depth</span>
                   </div>
                 </button>
@@ -183,7 +183,7 @@ export function ProductConfigurator({
         <div className="space-y-3">
           <label className="text-xs font-bold uppercase tracking-wider text-black flex items-center justify-between">
             <span>3. Glazing Specification</span>
-            <span className="text-[#0070bc] font-bold text-xs">
+            <span className="text-[#009886] font-bold text-xs">
               {selectedGlass ? selectedGlass.name : "Solid"}
             </span>
           </label>
@@ -198,8 +198,8 @@ export function ProductConfigurator({
                   className={cn(
                     "w-full p-3 rounded-lg border text-left flex items-center justify-between gap-3 transition-all",
                     isSelected
-                      ? "bg-[#e6f4fd] border-[#0070bc]"
-                      : "bg-white border-[#e6f4fd] hover:border-[#0070bc]"
+                      ? "bg-[#e6f7f5] border-[#009886]"
+                      : "bg-white border-[#e6f7f5] hover:border-[#009886]"
                   )}
                 >
                   <div>
@@ -207,7 +207,7 @@ export function ProductConfigurator({
                     <div className="text-[11px] text-black/70 mt-0.5">{gl.description}</div>
                   </div>
                   <div className="text-right shrink-0">
-                    <span className="text-xs font-mono font-bold text-[#0070bc]">Uw {gl.uValue}</span>
+                    <span className="text-xs font-mono font-bold text-[#009886]">Uw {gl.uValue}</span>
                     <span className="text-[10px] text-black/60 block">{gl.soundReductionDb} dB</span>
                   </div>
                 </button>
@@ -222,7 +222,7 @@ export function ProductConfigurator({
         <div className="space-y-3">
           <label className="text-xs font-bold uppercase tracking-wider text-black flex items-center justify-between">
             <span>4. Hardware & Handle System</span>
-            <span className="text-[#0070bc] font-bold text-xs">{selectedHardware.name}</span>
+            <span className="text-[#009886] font-bold text-xs">{selectedHardware.name}</span>
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             {product.hardwareOptions.map((hd) => {
@@ -235,8 +235,8 @@ export function ProductConfigurator({
                   className={cn(
                     "p-3 rounded-lg border text-left flex items-start justify-between gap-2 transition-all",
                     isSelected
-                      ? "bg-[#e6f4fd] border-[#0070bc]"
-                      : "bg-white border-[#e6f4fd] hover:border-[#0070bc]"
+                      ? "bg-[#e6f7f5] border-[#009886]"
+                      : "bg-white border-[#e6f7f5] hover:border-[#009886]"
                   )}
                 >
                   <div>
@@ -245,7 +245,7 @@ export function ProductConfigurator({
                       Finish: {hd.finish} • {hd.type}
                     </div>
                   </div>
-                  {isSelected && <Check className="w-4 h-4 text-[#0070bc] shrink-0 mt-0.5" />}
+                  {isSelected && <Check className="w-4 h-4 text-[#009886] shrink-0 mt-0.5" />}
                 </button>
               );
             })}
@@ -271,7 +271,7 @@ export function ProductConfigurator({
               max={product.dimensions.maxWidthMm}
               step={50}
               onChange={(e) => onWidthChange(Number(e.target.value))}
-              className="w-full bg-[#e6f4fd]/50 border border-[#e6f4fd] focus:border-[#0070bc] text-sm text-black font-mono p-2.5 rounded-lg focus:outline-none"
+              className="w-full bg-[#e6f7f5]/50 border border-[#e6f7f5] focus:border-[#009886] text-sm text-black font-mono p-2.5 rounded-lg focus:outline-none"
             />
           </div>
           <div>
@@ -283,7 +283,7 @@ export function ProductConfigurator({
               max={product.dimensions.maxHeightMm}
               step={50}
               onChange={(e) => onHeightChange(Number(e.target.value))}
-              className="w-full bg-[#e6f4fd]/50 border border-[#e6f4fd] focus:border-[#0070bc] text-sm text-black font-mono p-2.5 rounded-lg focus:outline-none"
+              className="w-full bg-[#e6f7f5]/50 border border-[#e6f7f5] focus:border-[#009886] text-sm text-black font-mono p-2.5 rounded-lg focus:outline-none"
             />
           </div>
         </div>
@@ -294,11 +294,11 @@ export function ProductConfigurator({
         <span className="text-xs font-bold uppercase tracking-wider text-black">
           6. Number of Units Required
         </span>
-        <div className="flex items-center border border-[#e6f4fd] rounded-lg bg-[#e6f4fd]/50">
+        <div className="flex items-center border border-[#e6f7f5] rounded-lg bg-[#e6f7f5]/50">
           <button
             type="button"
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            className="px-3 py-1.5 text-black hover:text-[#0070bc] text-sm font-bold"
+            className="px-3 py-1.5 text-black hover:text-[#009886] text-sm font-bold"
           >
             -
           </button>
@@ -306,7 +306,7 @@ export function ProductConfigurator({
           <button
             type="button"
             onClick={() => setQuantity(quantity + 1)}
-            className="px-3 py-1.5 text-black hover:text-[#0070bc] text-sm font-bold"
+            className="px-3 py-1.5 text-black hover:text-[#009886] text-sm font-bold"
           >
             +
           </button>
@@ -314,9 +314,9 @@ export function ProductConfigurator({
       </div>
 
       {/* Configuration Summary & Action Buttons */}
-      <div className="pt-6 border-t border-[#e6f4fd] space-y-4">
-        <div className="p-4 bg-[#e6f4fd] border border-[#0070bc]/30 rounded-lg text-xs space-y-1.5">
-          <div className="text-[#0070bc] font-bold uppercase tracking-wider text-[11px]">
+      <div className="pt-6 border-t border-[#e6f7f5] space-y-4">
+        <div className="p-4 bg-[#e6f7f5] border border-[#009886]/30 rounded-lg text-xs space-y-1.5">
+          <div className="text-[#009886] font-bold uppercase tracking-wider text-[11px]">
             Selected Specification:
           </div>
           <p className="text-black font-bold">
@@ -332,7 +332,7 @@ export function ProductConfigurator({
           <button
             type="button"
             onClick={handleRequestQuoteWithConfig}
-            className="flex-1 py-3.5 px-6 bg-[#0070bc] hover:bg-black text-white text-xs uppercase font-bold tracking-[0.18em] rounded-lg transition-all shadow-md flex items-center justify-center gap-2"
+            className="flex-1 py-3.5 px-6 bg-[#009886] hover:bg-black text-white text-xs uppercase font-bold tracking-[0.18em] rounded-lg transition-all shadow-md flex items-center justify-center gap-2"
           >
             <Send className="w-4 h-4 text-white" />
             <span>Request Quote for this Configuration</span>
@@ -341,23 +341,23 @@ export function ProductConfigurator({
           <button
             type="button"
             onClick={onLaunchAR}
-            className="py-3.5 px-6 bg-white hover:bg-[#e6f4fd] text-[#0070bc] text-xs uppercase font-bold tracking-[0.18em] rounded-lg border-2 border-[#0070bc] transition-all flex items-center justify-center gap-2"
+            className="py-3.5 px-6 bg-white hover:bg-[#e6f7f5] text-[#009886] text-xs uppercase font-bold tracking-[0.18em] rounded-lg border-2 border-[#009886] transition-all flex items-center justify-center gap-2"
           >
-            <Camera className="w-4 h-4 text-[#0070bc]" />
+            <Camera className="w-4 h-4 text-[#009886]" />
             <span>View in My Room (Camera)</span>
           </button>
         </div>
 
         <div className="text-center">
           <a
-            href={`https://wa.me/919876543210?text=${encodeURIComponent(
+            href={`https://wa.me/918531992626?text=${encodeURIComponent(
               `Hello SMC Fabrication, I am interested in ${product.name} (${product.sku}) - ${selectedWidth}x${selectedHeight}mm in ${selectedFinish.name}.`
             )}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs text-black/70 hover:text-[#0070bc] font-semibold inline-flex items-center gap-1.5 transition-colors"
+            className="text-xs text-black/70 hover:text-[#009886] font-semibold inline-flex items-center gap-1.5 transition-colors"
           >
-            <PhoneCall className="w-3.5 h-3.5 text-[#0070bc]" /> Or discuss directly on WhatsApp with an engineer
+            <PhoneCall className="w-3.5 h-3.5 text-[#009886]" /> Or discuss directly on WhatsApp with an engineer
           </a>
         </div>
       </div>

@@ -10,7 +10,7 @@ export default function RequestQuotePage() {
     <div className="min-h-screen bg-white pt-28 pb-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Page Header */}
-        <div className="border-b border-[#e6f4fd] pb-8 mb-12">
+        <div className="border-b border-[#e6f7f5] pb-8 mb-12">
           <SectionHeading
             badge="Direct Factory Estimation"
             title="Request An Architectural Quotation"
@@ -26,7 +26,7 @@ export default function RequestQuotePage() {
           <div className="lg:col-span-8">
             <Suspense
               fallback={
-                <div className="p-12 text-center text-xs text-black font-bold bg-[#e6f4fd] border border-[#e6f4fd] rounded-xl">
+                <div className="p-12 text-center text-xs text-black font-bold bg-[#e6f7f5] border border-[#e6f7f5] rounded-xl">
                   Loading quotation builder...
                 </div>
               }
@@ -37,14 +37,14 @@ export default function RequestQuotePage() {
 
           {/* Right Sidebar: Estimation Assurances */}
           <div className="lg:col-span-4 space-y-6">
-            <div className="bg-white border-2 border-[#e6f4fd] rounded-2xl p-6 sm:p-8 space-y-6 shadow-sm">
-              <h3 className="text-lg font-extrabold text-black border-b border-[#e6f4fd] pb-4">
+            <div className="bg-white border-2 border-[#e6f7f5] rounded-2xl p-6 sm:p-8 space-y-6 shadow-sm">
+              <h3 className="text-lg font-extrabold text-black border-b border-[#e6f7f5] pb-4">
                 What Happens Next?
               </h3>
 
               <div className="space-y-4 text-xs text-black/70">
                 <div className="flex items-start gap-3">
-                  <span className="font-mono text-sm text-[#0070bc] font-bold shrink-0">
+                  <span className="font-mono text-sm text-[#009886] font-bold shrink-0">
                     01.
                   </span>
                   <div>
@@ -58,7 +58,7 @@ export default function RequestQuotePage() {
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <span className="font-mono text-sm text-[#0070bc] font-bold shrink-0">
+                  <span className="font-mono text-sm text-[#009886] font-bold shrink-0">
                     02.
                   </span>
                   <div>
@@ -72,7 +72,7 @@ export default function RequestQuotePage() {
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <span className="font-mono text-sm text-[#0070bc] font-bold shrink-0">
+                  <span className="font-mono text-sm text-[#009886] font-bold shrink-0">
                     03.
                   </span>
                   <div>
@@ -87,23 +87,23 @@ export default function RequestQuotePage() {
               </div>
 
               {/* WhatsApp Quick Direct Option */}
-              <div className="pt-4 border-t border-[#e6f4fd]">
+              <div className="pt-4 border-t border-[#e6f7f5]">
                 <a
-                  href="https://wa.me/919876543210?text=Hello%20SMC%20Fabrication%2C%20I%20have%20an%20urgent%20architectural%20quote%20request."
+                  href="https://wa.me/918531992626?text=Hello%20SMC%20Fabrication%2C%20I%20have%20an%20urgent%20architectural%20quote%20request."
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full py-3 bg-[#e6f4fd] hover:bg-[#0070bc] hover:text-white border border-[#0070bc] text-[#0070bc] text-xs uppercase font-bold tracking-wider rounded-lg transition-colors flex items-center justify-center gap-2"
+                  className="w-full py-3 bg-[#e6f7f5] hover:bg-[#009886] hover:text-white border border-[#009886] text-[#009886] text-xs uppercase font-bold tracking-wider rounded-lg transition-colors flex items-center justify-center gap-2"
                 >
-                  <PhoneCall className="w-4 h-4 text-[#0070bc] group-hover:text-white" />
+                  <PhoneCall className="w-4 h-4 text-[#009886] group-hover:text-white" />
                   <span>Urgent Inquiry via WhatsApp</span>
                 </a>
               </div>
             </div>
 
             {/* Quality Standard Guarantee Box */}
-            <div className="p-6 bg-[#e6f4fd] border border-[#0070bc]/30 rounded-2xl text-xs text-black/80 space-y-2">
+            <div className="p-6 bg-[#e6f7f5] border border-[#009886]/30 rounded-2xl text-xs text-black/80 space-y-2">
               <div className="flex items-center gap-2 font-bold text-black uppercase tracking-wider">
-                <ShieldCheck className="w-4 h-4 text-[#0070bc]" />
+                <ShieldCheck className="w-4 h-4 text-[#009886]" />
                 <span>15-Year Structural Warranty</span>
               </div>
               <p className="leading-relaxed text-[11px]">

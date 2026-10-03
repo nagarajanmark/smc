@@ -49,7 +49,7 @@ export function TrustMetrics() {
   ];
 
   return (
-    <section className="py-24 bg-white border-t border-[#e6f4fd]">
+    <section className="py-24 bg-white border-t border-[#e6f7f5]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
           badge="Our Manufacturing Ethos"
@@ -67,9 +67,9 @@ export function TrustMetrics() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="p-6 sm:p-8 bg-[#e6f4fd]/60 border-2 border-[#e6f4fd] hover:border-[#0070bc] rounded-sm transition-all group shadow-xs"
+              className="p-6 sm:p-8 bg-[#e6f7f5]/60 border-2 border-[#e6f7f5] hover:border-[#009886] rounded-sm transition-all group shadow-xs"
             >
-              <div className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#0070bc] font-mono tracking-tight group-hover:scale-105 transition-transform duration-300">
+              <div className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#009886] font-mono tracking-tight group-hover:scale-105 transition-transform duration-300">
                 {metric.value}
               </div>
               <h3 className="text-sm font-bold uppercase tracking-wider text-black mt-3">
@@ -79,7 +79,7 @@ export function TrustMetrics() {
                 {metric.subtext}
               </p>
               {metric.isDemo && (
-                <span className="inline-block mt-3 text-[9px] uppercase tracking-widest text-[#0070bc] font-mono font-semibold">
+                <span className="inline-block mt-3 text-[9px] uppercase tracking-widest text-[#009886] font-mono font-semibold">
                   [Sample Metric]
                 </span>
               )}
@@ -96,10 +96,10 @@ export function TrustMetrics() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 + i * 0.1 }}
-              className="p-6 bg-white border border-[#e6f4fd] rounded-sm flex flex-col justify-between shadow-xs hover:border-[#0070bc] transition-colors"
+              className="p-6 bg-white border border-[#e6f7f5] rounded-sm flex flex-col justify-between shadow-xs hover:border-[#009886] transition-colors"
             >
               <div>
-                <div className="w-9 h-9 rounded-sm bg-[#e6f4fd] flex items-center justify-center text-[#0070bc] mb-4">
+                <div className="w-9 h-9 rounded-sm bg-[#e6f7f5] flex items-center justify-center text-[#009886] mb-4">
                   <CheckCircle2 className="w-5 h-5" />
                 </div>
                 <h4 className="text-sm font-bold uppercase tracking-wider text-black mb-2">

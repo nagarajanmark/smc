@@ -22,11 +22,7 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
   const [activeImageIndex] = useState(0);
 
   const handleOpenVisualizer = () => {
-    if (isMobileDevice()) {
-      setIsCameraPreviewOpen(true);
-    } else {
-      setIsQRModalOpen(true);
-    }
+    setIsCameraPreviewOpen(true);
   };
 
   const isList = viewMode === "list";
@@ -39,14 +35,14 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
         viewport={{ once: true }}
         transition={{ duration: 0.4 }}
         className={cn(
-          "group relative bg-white border-2 border-[#e6f4fd] hover:border-[#0070bc] transition-all duration-300 rounded-2xl overflow-hidden flex shadow-sm hover:shadow-md",
+          "group relative bg-white border-2 border-[#e6f7f5] hover:border-[#009886] transition-all duration-300 rounded-2xl overflow-hidden flex shadow-sm hover:shadow-md",
           isList ? "flex-col md:flex-row" : "flex-col"
         )}
       >
         {/* Product Image Area with Architectural Studio Backdrop */}
         <div
           className={cn(
-            "relative overflow-hidden bg-gradient-to-b from-[#f0f7fd] via-[#f9fcff] to-[#e6f4fd] shrink-0 flex items-center justify-center p-4 sm:p-6",
+            "relative overflow-hidden bg-gradient-to-b from-[#f0f7fd] via-[#f9fcff] to-[#e6f7f5] shrink-0 flex items-center justify-center p-4 sm:p-6",
             isList ? "w-full md:w-80 h-64 md:h-auto" : "w-full h-72 sm:h-80"
           )}
         >
@@ -77,9 +73,9 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
               <button
                 onClick={handleOpenVisualizer}
                 title="View in Camera Visualizer"
-                className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/95 hover:bg-[#0070bc] text-black hover:text-white text-[10px] uppercase tracking-wider font-bold rounded-full border border-[#e6f4fd] transition-colors shadow-sm"
+                className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/95 hover:bg-[#009886] text-black hover:text-white text-[10px] uppercase tracking-wider font-bold rounded-full border border-[#e6f7f5] transition-colors shadow-sm"
               >
-                <Camera className="w-3 h-3 text-[#0070bc] group-hover:text-white" />
+                <Camera className="w-3 h-3 text-[#009886] group-hover:text-white" />
                 <span>View In My Room</span>
               </button>
             )}
@@ -89,14 +85,14 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
           <div className="absolute bottom-3 left-3 right-3 z-10 flex items-center justify-between gap-2 opacity-95 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             <button
               onClick={handleOpenVisualizer}
-              className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 bg-[#0070bc] hover:bg-black text-white text-[11px] uppercase tracking-wider font-bold rounded-lg transition-all shadow-md cursor-pointer"
+              className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 bg-[#009886] hover:bg-black text-white text-[11px] uppercase tracking-wider font-bold rounded-lg transition-all shadow-md cursor-pointer"
             >
               <Camera className="w-3.5 h-3.5 text-white" />
               <span>View In My Room</span>
             </button>
             <button
               onClick={() => setIsQRModalOpen(true)}
-              className="p-2 bg-white/95 hover:bg-[#0070bc] text-black hover:text-white rounded-lg border border-[#e6f4fd] transition-colors shadow-md cursor-pointer"
+              className="p-2 bg-white/95 hover:bg-[#009886] text-black hover:text-white rounded-lg border border-[#e6f7f5] transition-colors shadow-md cursor-pointer"
               title="Mobile QR Code"
             >
               <QrCode className="w-4 h-4" />
@@ -110,13 +106,13 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
             {/* SKU and Opening Type */}
             <div className="flex items-center justify-between text-xs text-black/60 mb-2 font-mono font-medium">
               <span>{product.sku}</span>
-              <span className="text-[#0070bc] font-bold font-sans">{product.openingType}</span>
+              <span className="text-[#009886] font-bold font-sans">{product.openingType}</span>
             </div>
 
             {/* Title */}
             <h3
               onClick={handleOpenVisualizer}
-              className="text-lg font-extrabold text-black hover:text-[#0070bc] transition-colors leading-snug cursor-pointer"
+              className="text-lg font-extrabold text-black hover:text-[#009886] transition-colors leading-snug cursor-pointer"
             >
               {product.name}
             </h3>
@@ -127,7 +123,7 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
             </p>
 
             {/* Specifications Highlights */}
-            <div className="mt-4 pt-3 border-t border-[#e6f4fd] grid grid-cols-2 gap-2 text-[11px] text-black/70">
+            <div className="mt-4 pt-3 border-t border-[#e6f7f5] grid grid-cols-2 gap-2 text-[11px] text-black/70">
               <div>
                 <span className="text-black/50 block font-semibold">Material:</span>
                 <span className="text-black font-bold truncate block">
@@ -166,18 +162,18 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
           </div>
 
           {/* Action Row */}
-          <div className="mt-6 pt-4 border-t border-[#e6f4fd] flex items-center justify-between gap-3">
-            <button
-              onClick={handleOpenVisualizer}
-              className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider font-bold text-[#0070bc] hover:text-black transition-colors cursor-pointer"
+          <div className="mt-6 pt-4 border-t border-[#e6f7f5] flex items-center justify-between gap-3">
+            <Link
+              href={`/visualizer?product=${encodeURIComponent(product.slug)}`}
+              className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider font-bold text-[#009886] hover:text-black transition-colors cursor-pointer"
             >
               <Camera className="w-3.5 h-3.5" />
-              <span>View in Room</span>
-            </button>
+              <span>Studio Visualizer</span>
+            </Link>
 
             <Link
               href={`/request-quote?product=${encodeURIComponent(product.name)}`}
-              className="px-4 py-2 text-[11px] uppercase tracking-wider font-bold text-white bg-[#0070bc] hover:bg-black rounded-lg transition-colors shadow-sm"
+              className="px-4 py-2 text-[11px] uppercase tracking-wider font-bold text-white bg-[#009886] hover:bg-black rounded-lg transition-colors shadow-sm"
             >
               Get Quote
             </Link>

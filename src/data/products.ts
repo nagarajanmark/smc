@@ -31,8 +31,8 @@ export const PRODUCTS_DATA: Product[] = [
     },
     finishes: [
       { id: "fin-obsidian", name: "Matte Obsidian Black", hex: "#000000", textureLabel: "Micro-texture Fluorocarbon" },
-      { id: "fin-arch-blue", name: "Architectural Cobalt Blue", hex: "#0070bc", textureLabel: "Electro-anodized Metallic Satin" },
-      { id: "fin-ice-light", name: "Ice Blue Metallic", hex: "#e6f4fd", textureLabel: "Satin Powder Coated Texture" },
+      { id: "fin-arch-blue", name: "Architectural Emerald Green", hex: "#009886", textureLabel: "Electro-anodized Metallic Satin" },
+      { id: "fin-ice-light", name: "Ice Mint Metallic", hex: "#e6f7f5", textureLabel: "Satin Powder Coated Texture" },
       { id: "fin-white", name: "Signal Pure White", hex: "#ffffff", textureLabel: "Smooth Satin Finish" }
     ],
     frameOptions: [
@@ -46,7 +46,7 @@ export const PRODUCTS_DATA: Product[] = [
     ],
     hardwareOptions: [
       { id: "hd-fullpull", name: "Full-Height Integrated LED Bar Handle (2400mm)", finish: "Matte Black Anodized", type: "Full Length Pull" },
-      { id: "hd-recessed", name: "Concealed Finger-Grip Pocket with Biometric Scan", finish: "Architectural Blue", type: "Integrated Smart Access" },
+      { id: "hd-recessed", name: "Concealed Finger-Grip Pocket with Biometric Scan", finish: "Architectural Emerald Green", type: "Integrated Smart Access" },
       { id: "hd-minimal", name: "Minimalist Offset Solid Pull (1200mm)", finish: "Solid Black", type: "Offset Pull Handle" }
     ],
     specifications: {
@@ -79,7 +79,7 @@ export const PRODUCTS_DATA: Product[] = [
     transparentPngUrl: "/images/product-pivot-door.png",
     pngVariants: [
       { name: "Obsidian Black", pngUrl: "/images/product-pivot-door.png", finishId: "fin-obsidian" },
-      { name: "Architectural Blue", pngUrl: "/images/product-pivot-door.png", finishId: "fin-arch-blue" },
+      { name: "Architectural Emerald Green", pngUrl: "/images/product-pivot-door.png", finishId: "fin-arch-blue" },
       { name: "Pure White", pngUrl: "/images/product-pivot-door.png", finishId: "fin-white" }
     ],
     arAvailable: true,
@@ -117,8 +117,8 @@ export const PRODUCTS_DATA: Product[] = [
     },
     finishes: [
       { id: "fin-black", name: "Deep Jet Black", hex: "#000000", textureLabel: "Ultra-Matte Marine Grade" },
-      { id: "fin-blue", name: "Architectural Blue", hex: "#0070bc", textureLabel: "Satin Brushed Metallic" },
-      { id: "fin-ice", name: "Ice Blue Tint", hex: "#e6f4fd", textureLabel: "Fine Powder Coated Texture" },
+      { id: "fin-blue", name: "Architectural Emerald Green", hex: "#009886", textureLabel: "Satin Brushed Metallic" },
+      { id: "fin-ice", name: "Ice Mint Tint", hex: "#e6f7f5", textureLabel: "Fine Powder Coated Texture" },
       { id: "fin-white", name: "Signal White", hex: "#ffffff", textureLabel: "Smooth Architectural Powder" }
     ],
     frameOptions: [
@@ -197,9 +197,9 @@ export const PRODUCTS_DATA: Product[] = [
       unit: "mm"
     },
     finishes: [
-      { id: "fin-blue", name: "Architectural Blue Anodized", hex: "#0070bc", textureLabel: "Satin Brushed Architectural" },
+      { id: "fin-blue", name: "Architectural Emerald Green Anodized", hex: "#009886", textureLabel: "Satin Brushed Architectural" },
       { id: "fin-black", name: "Obsidian Black", hex: "#000000", textureLabel: "Matte Powder Coating" },
-      { id: "fin-ice", name: "Ice Blue Light", hex: "#e6f4fd", textureLabel: "Fine Textured Coating" },
+      { id: "fin-ice", name: "Ice Mint Light", hex: "#e6f7f5", textureLabel: "Fine Textured Coating" },
       { id: "fin-white", name: "Pure Signal White", hex: "#ffffff", textureLabel: "Smooth Satin Finish" }
     ],
     frameOptions: [
@@ -212,7 +212,7 @@ export const PRODUCTS_DATA: Product[] = [
     ],
     hardwareOptions: [
       { id: "hd-secustik-black", name: "Hoppe Secustik Anti-Intrusion Handle", finish: "Matte Black", type: "Security Locking Handle" },
-      { id: "hd-secustik-blue", name: "Architectural Blue Lever Handle", finish: "Cobalt Anodized", type: "Luxury Handle" }
+      { id: "hd-secustik-blue", name: "Architectural Emerald Green Lever Handle", finish: "Cobalt Anodized", type: "Luxury Handle" }
     ],
     specifications: {
       thermalTransmittance: "Uw = 0.90 W/m²K",
@@ -278,8 +278,8 @@ export const PRODUCTS_DATA: Product[] = [
     },
     finishes: [
       { id: "fin-black-timber", name: "Obsidian Black Stained Timber", hex: "#000000", textureLabel: "Wire-Brushed Open Pore Finish" },
-      { id: "fin-blue-timber", name: "Architectural Blue Lacquer", hex: "#0070bc", textureLabel: "Matte Sealed Architectural Grain" },
-      { id: "fin-ice-timber", name: "Ice Blue Nordic Timber", hex: "#e6f4fd", textureLabel: "Light Stain Open Pore" },
+      { id: "fin-blue-timber", name: "Architectural Emerald Green Lacquer", hex: "#009886", textureLabel: "Matte Sealed Architectural Grain" },
+      { id: "fin-ice-timber", name: "Ice Mint Nordic Timber", hex: "#e6f7f5", textureLabel: "Light Stain Open Pore" },
       { id: "fin-white-timber", name: "Pure White Satin Wood", hex: "#ffffff", textureLabel: "Natural Matte Clear Topcoat" }
     ],
     frameOptions: [
@@ -290,7 +290,7 @@ export const PRODUCTS_DATA: Product[] = [
     ],
     hardwareOptions: [
       { id: "hd-bronze-bar", name: "Solid Cast Rectangular Pull (800mm)", finish: "Matte Black", type: "Solid Pull Bar" },
-      { id: "hd-knurled-lever", name: "Architectural Lever Set", finish: "Architectural Blue", type: "Designer Lever Handle" }
+      { id: "hd-knurled-lever", name: "Architectural Lever Set", finish: "Architectural Emerald Green", type: "Designer Lever Handle" }
     ],
     specifications: {
       thermalTransmittance: "Uw = 1.20 W/m²K",
@@ -357,8 +357,8 @@ export const PRODUCTS_DATA: Product[] = [
     finishes: [
       { id: "fin-upvc-white", name: "Alpine White (Smooth)", hex: "#ffffff", textureLabel: "UV-Resistant Smooth Polymer" },
       { id: "fin-upvc-black", name: "Black Foil", hex: "#000000", textureLabel: "Architectural Embossed Foil" },
-      { id: "fin-upvc-blue", name: "Architectural Blue Foil", hex: "#0070bc", textureLabel: "Realistic Color Film" },
-      { id: "fin-upvc-ice", name: "Ice Blue Light Foil", hex: "#e6f4fd", textureLabel: "Embossed Light Finish" }
+      { id: "fin-upvc-blue", name: "Architectural Emerald Green Foil", hex: "#009886", textureLabel: "Realistic Color Film" },
+      { id: "fin-upvc-ice", name: "Ice Mint Light Foil", hex: "#e6f7f5", textureLabel: "Embossed Light Finish" }
     ],
     frameOptions: [
       { id: "frm-upvc-80", name: "6-Chamber 80mm Depth Profile", depthMm: 80, sightlineMm: 72, description: "Multi-chamber design with continuous galvanized steel core reinforcement." }
@@ -435,9 +435,9 @@ export const PRODUCTS_DATA: Product[] = [
     },
     finishes: [
       { id: "fin-primed-paint", name: "Pure White Primer", hex: "#ffffff", textureLabel: "Smooth Sanded Primer" },
-      { id: "fin-blue-int", name: "Architectural Blue", hex: "#0070bc", textureLabel: "Ultra-Matte Blue Lacquer" },
+      { id: "fin-blue-int", name: "Architectural Emerald Green", hex: "#009886", textureLabel: "Ultra-Matte Blue Lacquer" },
       { id: "fin-black-int", name: "Deep Jet Black", hex: "#000000", textureLabel: "Anti-Fingerprint Nanotech" },
-      { id: "fin-ice-int", name: "Ice Blue Soft-Touch", hex: "#e6f4fd", textureLabel: "Velvet Smooth Finish" }
+      { id: "fin-ice-int", name: "Ice Mint Soft-Touch", hex: "#e6f7f5", textureLabel: "Velvet Smooth Finish" }
     ],
     frameOptions: [
       { id: "frm-frameless-jamb", name: "Concealed Plaster-In Aluminium Frame", depthMm: 100, sightlineMm: 0, description: "Zero-trim aluminium jamb embedded under plasterboard." }
@@ -445,7 +445,7 @@ export const PRODUCTS_DATA: Product[] = [
     glassOptions: [],
     hardwareOptions: [
       { id: "hd-magnetic-black", name: "Magnetic Silent Strike Latch with Minimal Rose", finish: "Matte Black", type: "Magnetic Privacy Lock" },
-      { id: "hd-magnetic-blue", name: "Architectural Blue Lever Handle", finish: "Cobalt Satin", type: "Passage Lever" }
+      { id: "hd-magnetic-blue", name: "Architectural Emerald Green Lever Handle", finish: "Cobalt Satin", type: "Passage Lever" }
     ],
     specifications: {
       thermalTransmittance: "Uw = 1.4 W/m²K",
@@ -474,7 +474,7 @@ export const PRODUCTS_DATA: Product[] = [
     transparentPngUrl: "/images/product-interior-door.png",
     pngVariants: [
       { name: "White Flush", pngUrl: "/images/product-interior-door.png", finishId: "fin-primed-paint" },
-      { name: "Architectural Blue", pngUrl: "/images/product-interior-door.png", finishId: "fin-blue-int" },
+      { name: "Architectural Emerald Green", pngUrl: "/images/product-interior-door.png", finishId: "fin-blue-int" },
       { name: "Deep Jet Black", pngUrl: "/images/product-interior-door.png", finishId: "fin-black-int" }
     ],
     arAvailable: true,
@@ -511,8 +511,8 @@ export const PRODUCTS_DATA: Product[] = [
     },
     finishes: [
       { id: "fin-bif-black", name: "Deep Satin Black", hex: "#000000", textureLabel: "Fluorocarbon 30-Year Coating" },
-      { id: "fin-bif-blue", name: "Architectural Blue", hex: "#0070bc", textureLabel: "Electrochemical Anodized" },
-      { id: "fin-bif-ice", name: "Ice Blue Light", hex: "#e6f4fd", textureLabel: "Architectural Matte Finish" },
+      { id: "fin-bif-blue", name: "Architectural Emerald Green", hex: "#009886", textureLabel: "Electrochemical Anodized" },
+      { id: "fin-bif-ice", name: "Ice Mint Light", hex: "#e6f7f5", textureLabel: "Architectural Matte Finish" },
       { id: "fin-bif-white", name: "Pure Signal White", hex: "#ffffff", textureLabel: "Smooth Satin Finish" }
     ],
     frameOptions: [
@@ -525,7 +525,7 @@ export const PRODUCTS_DATA: Product[] = [
     ],
     hardwareOptions: [
       { id: "hd-bif-flush-pull", name: "Flush Magnetic Folding Intermediate D-Handle", finish: "Matte Black", type: "Fold-Flat Pull" },
-      { id: "hd-bif-master-lever", name: "Multi-Point Shootbolt Master Lever", finish: "Architectural Blue", type: "Master Lock Lever" }
+      { id: "hd-bif-master-lever", name: "Multi-Point Shootbolt Master Lever", finish: "Architectural Emerald Green", type: "Master Lock Lever" }
     ],
     specifications: {
       thermalTransmittance: "Uw = 1.05 W/m²K",
@@ -590,9 +590,9 @@ export const PRODUCTS_DATA: Product[] = [
       unit: "mm"
     },
     finishes: [
-      { id: "fin-blue-arch", name: "Architectural Cobalt Blue", hex: "#0070bc", textureLabel: "Living Architectural Finish" },
+      { id: "fin-blue-arch", name: "Architectural Emerald Green", hex: "#009886", textureLabel: "Living Architectural Finish" },
       { id: "fin-black-steel", name: "Obsidian Structural Steel", hex: "#000000", textureLabel: "Oxidized Velvet Texture" },
-      { id: "fin-ice-steel", name: "Ice Blue Anodized", hex: "#e6f4fd", textureLabel: "Ultra-High Durability Anodizing" },
+      { id: "fin-ice-steel", name: "Ice Mint Anodized", hex: "#e6f7f5", textureLabel: "Ultra-High Durability Anodizing" },
       { id: "fin-white-steel", name: "Signal Pure White", hex: "#ffffff", textureLabel: "Smooth Weatherproof Coating" }
     ],
     frameOptions: [
@@ -602,7 +602,7 @@ export const PRODUCTS_DATA: Product[] = [
       { id: "gl-bent-insulated", name: "Curved Insulated Low-E Safety Glass", uValue: 1.0, soundReductionDb: 42, description: "Cylindrically bent laminated double glass." }
     ],
     hardwareOptions: [
-      { id: "hd-custom-sculpted", name: "Sculpted Monolithic Pull Handle", finish: "Architectural Blue", type: "One-off Sculptural Casting" }
+      { id: "hd-custom-sculpted", name: "Sculpted Monolithic Pull Handle", finish: "Architectural Emerald Green", type: "One-off Sculptural Casting" }
     ],
     specifications: {
       thermalTransmittance: "Uw = 0.95 W/m²K (Custom)",
@@ -630,9 +630,9 @@ export const PRODUCTS_DATA: Product[] = [
     ],
     transparentPngUrl: "/images/product-custom-facade.png",
     pngVariants: [
-      { name: "Custom Steel Facade", pngUrl: "/images/product-custom-facade.png", finishId: "fin-blue-arch" },
-      { name: "Antique Silhouettes", pngUrl: "/images/product-antique-window.png", finishId: "fin-black-steel" },
-      { name: "Signal White", pngUrl: "/images/product-custom-facade.png", finishId: "fin-white-steel" }
+      { name: "Architectural Emerald Green", pngUrl: "/images/product-custom-facade.png", finishId: "fin-blue-arch" },
+      { name: "Obsidian Structural Steel", pngUrl: "/images/product-antique-window.png", finishId: "fin-black-steel" },
+      { name: "Signal Pure White", pngUrl: "/images/product-custom-facade.png", finishId: "fin-white-steel" }
     ],
     arAvailable: true,
     featured: true,

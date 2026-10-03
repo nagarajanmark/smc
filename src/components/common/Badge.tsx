@@ -9,8 +9,8 @@ interface BadgeProps {
 
 export function Badge({ children, variant = "primary", className }: BadgeProps) {
   const variants = {
-    primary: "bg-[#0070bc] text-white border-[#0070bc]",
-    light: "bg-[#e6f4fd] text-[#0070bc] border-[#0070bc]/30",
+    primary: "bg-[#009886] text-white border-[#009886]",
+    light: "bg-[#e6f7f5] text-[#009886] border-[#009886]/30",
     black: "bg-black text-white border-black",
     outline: "bg-white text-black border-black/20",
   };

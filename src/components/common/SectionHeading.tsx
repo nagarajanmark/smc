@@ -40,11 +40,11 @@ export function SectionHeading({
           transition={{ duration: 0.5 }}
           className={cn("mb-3.5 flex items-center gap-2", isCenter ? "justify-center" : "")}
         >
-          <span className="w-6 h-[2px] bg-[#0070bc]" />
-          <span className="text-xs uppercase tracking-[0.25em] font-bold text-[#0070bc]">
+          <span className="w-6 h-[2px] bg-[#009886]" />
+          <span className="text-xs uppercase tracking-[0.25em] font-bold text-[#009886]">
             {badge}
           </span>
-          {isCenter && <span className="w-6 h-[2px] bg-[#0070bc]" />}
+          {isCenter && <span className="w-6 h-[2px] bg-[#009886]" />}
         </motion.div>
       )}
 
@@ -54,7 +54,7 @@ export function SectionHeading({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-xs uppercase tracking-widest font-mono mb-2 text-[#0070bc]"
+          className="text-xs uppercase tracking-widest font-mono mb-2 text-[#009886]"
         >
           {subtitle}
         </motion.p>

@@ -39,15 +39,11 @@ export function ARPreviewFeature() {
       : currentProduct.transparentPngUrl || "/images/product-pivot-door.png";
 
   const handleLaunchVisualizer = () => {
-    if (isMobileDevice()) {
-      setIsCameraModalOpen(true);
-    } else {
-      setIsQRModalOpen(true);
-    }
+    setIsCameraModalOpen(true);
   };
 
   return (
-    <section className="py-20 sm:py-28 bg-[#f8fbfe] border-t border-[#e6f4fd] relative overflow-hidden">
+    <section className="py-20 sm:py-28 bg-[#f8fbfe] border-t border-[#e6f7f5] relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
           
@@ -65,8 +61,8 @@ export function ARPreviewFeature() {
                   className={cn(
                     "px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer",
                     selectedProductIndex === idx
-                      ? "bg-[#0070bc] text-white shadow-sm"
-                      : "bg-white text-black/70 hover:text-black border border-[#e6f4fd] hover:border-[#0070bc]/30"
+                      ? "bg-[#009886] text-white shadow-sm"
+                      : "bg-white text-black/70 hover:text-black border border-[#e6f7f5] hover:border-[#009886]/30"
                   )}
                 >
                   {prod.name}
@@ -75,9 +71,9 @@ export function ARPreviewFeature() {
             </div>
 
             {/* Clean Showroom Frame */}
-            <div
-              onClick={handleLaunchVisualizer}
-              className="group relative h-[420px] sm:h-[480px] rounded-3xl border border-[#e6f4fd] hover:border-[#0070bc]/40 bg-gradient-to-b from-[#ffffff] via-[#f7fbfe] to-[#e6f4fd]/60 p-6 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 shadow-sm hover:shadow-lg overflow-hidden"
+            <Link
+              href={`/visualizer?product=${currentProduct.slug}`}
+              className="group relative h-[420px] sm:h-[480px] rounded-3xl border border-[#e6f7f5] hover:border-[#009886]/40 bg-gradient-to-b from-[#ffffff] via-[#f7fbfe] to-[#e6f7f5]/60 p-6 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 shadow-sm hover:shadow-lg overflow-hidden block"
             >
               {/* Soft Pedestal Shadow */}
               <div className="absolute bottom-8 left-1/2 -translate-x-1/2 w-3/5 h-4 bg-black/10 rounded-full blur-lg pointer-events-none" />
@@ -95,18 +91,18 @@ export function ARPreviewFeature() {
               </div>
 
               {/* Subtle hover badge */}
-              <div className="absolute bottom-4 right-4 z-20 flex items-center gap-1.5 px-3 py-1.5 bg-black/80 text-white rounded-lg text-xs font-bold backdrop-blur-md opacity-90 group-hover:bg-[#0070bc] transition-colors">
+              <div className="absolute bottom-4 right-4 z-20 flex items-center gap-1.5 px-3 py-1.5 bg-black/80 text-white rounded-lg text-xs font-bold backdrop-blur-md opacity-90 group-hover:bg-[#009886] transition-colors">
                 <Camera className="w-3.5 h-3.5" />
-                <span>Tap to Preview in Room</span>
+                <span>Open Studio Visualizer Page</span>
               </div>
-            </div>
+            </Link>
           </div>
 
           {/* Right Column: Neat, Clean, Low Content */}
           <div className="lg:col-span-5 flex flex-col justify-center space-y-6">
             <div className="space-y-3">
-              <span className="text-xs uppercase tracking-[0.25em] font-extrabold text-[#0070bc]">
-                Camera Room Preview
+              <span className="text-xs uppercase tracking-[0.25em] font-extrabold text-[#009886]">
+                Interactive Visualizer
               </span>
 
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-black tracking-tight leading-tight">
@@ -114,26 +110,26 @@ export function ARPreviewFeature() {
               </h2>
 
               <p className="text-sm sm:text-base text-black/70 leading-relaxed pt-1">
-                See how our doors and windows look in your exact room using your phone camera. No app download required.
+                Customize colors, adjust dimensions, upload your room opening photo, or use your live phone camera in our dedicated Studio Visualizer.
               </p>
             </div>
 
             {/* Clear Action Buttons */}
             <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-              <button
-                onClick={handleLaunchVisualizer}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#0070bc] hover:bg-black text-white text-xs uppercase tracking-[0.16em] font-bold rounded-xl transition-all shadow-md cursor-pointer"
+              <Link
+                href={`/visualizer?product=${currentProduct.slug}`}
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#009886] hover:bg-black text-white text-xs uppercase tracking-[0.16em] font-bold rounded-xl transition-all shadow-md cursor-pointer"
               >
                 <Camera className="w-4 h-4" />
-                <span>Open Camera Preview</span>
-              </button>
+                <span>Launch Visualizer Studio</span>
+              </Link>
 
               <Link
                 href="/products"
-                className="inline-flex items-center justify-center gap-2 px-5 py-3.5 bg-white hover:bg-[#e6f4fd] border border-[#0070bc]/30 text-black text-xs uppercase tracking-[0.16em] font-bold rounded-xl transition-colors"
+                className="inline-flex items-center justify-center gap-2 px-5 py-3.5 bg-white hover:bg-[#e6f7f5] border border-[#009886]/30 text-black text-xs uppercase tracking-[0.16em] font-bold rounded-xl transition-colors"
               >
                 <span>View Products</span>
-                <ArrowRight className="w-3.5 h-3.5 text-[#0070bc]" />
+                <ArrowRight className="w-3.5 h-3.5 text-[#009886]" />
               </Link>
             </div>
           </div>

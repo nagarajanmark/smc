@@ -39,9 +39,9 @@ export function ProductGallery({
       {/* Main Image Frame */}
       <div
         className={cn(
-          "relative w-full h-[420px] sm:h-[500px] lg:h-[560px] rounded-2xl border-2 border-[#e6f4fd] overflow-hidden group shadow-sm flex items-center justify-center cursor-zoom-in",
+          "relative w-full h-[420px] sm:h-[500px] lg:h-[560px] rounded-2xl border-2 border-[#e6f7f5] overflow-hidden group shadow-sm flex items-center justify-center cursor-zoom-in",
           isPng
-            ? "bg-gradient-to-b from-[#f0f7fd] via-[#f9fcff] to-[#e6f4fd] p-6 sm:p-10"
+            ? "bg-gradient-to-b from-[#f0f7fd] via-[#f9fcff] to-[#e6f7f5] p-6 sm:p-10"
             : "bg-white"
         )}
         onClick={() => setIsZoomModalOpen(true)}
@@ -70,7 +70,7 @@ export function ProductGallery({
         {/* Top Badges */}
         <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none z-10">
           {badge && (
-            <span className="px-3 py-1 bg-white/95 text-[#0070bc] border border-[#0070bc]/30 text-xs uppercase tracking-widest font-bold rounded-full shadow-sm">
+            <span className="px-3 py-1 bg-white/95 text-[#009886] border border-[#009886]/30 text-xs uppercase tracking-widest font-bold rounded-full shadow-sm">
               {badge}
             </span>
           )}
@@ -79,7 +79,7 @@ export function ProductGallery({
               e.stopPropagation();
               setIsZoomModalOpen(true);
             }}
-            className="pointer-events-auto p-2.5 bg-white/90 hover:bg-white text-black hover:text-[#0070bc] border border-[#e6f4fd] rounded-lg transition-colors shadow-sm"
+            className="pointer-events-auto p-2.5 bg-white/90 hover:bg-white text-black hover:text-[#009886] border border-[#e6f7f5] rounded-lg transition-colors shadow-sm"
             title="Full size image zoom"
           >
             <Maximize2 className="w-4 h-4" />
@@ -94,7 +94,7 @@ export function ProductGallery({
                 e.stopPropagation();
                 handlePrev();
               }}
-              className="pointer-events-auto p-2 bg-white/90 hover:bg-[#0070bc] text-black hover:text-white border border-[#e6f4fd] rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
+              className="pointer-events-auto p-2 bg-white/90 hover:bg-[#009886] text-black hover:text-white border border-[#e6f7f5] rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
               aria-label="Previous image"
             >
               <ChevronLeft className="w-5 h-5" />
@@ -104,7 +104,7 @@ export function ProductGallery({
                 e.stopPropagation();
                 handleNext();
               }}
-              className="pointer-events-auto p-2 bg-white/90 hover:bg-[#0070bc] text-black hover:text-white border border-[#e6f4fd] rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
+              className="pointer-events-auto p-2 bg-white/90 hover:bg-[#009886] text-black hover:text-white border border-[#e6f7f5] rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
               aria-label="Next image"
             >
               <ChevronRight className="w-5 h-5" />
@@ -120,7 +120,7 @@ export function ProductGallery({
                 e.stopPropagation();
                 onOpenRoomPreview();
               }}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-white/95 hover:bg-[#0070bc] text-[#0070bc] hover:text-white border border-[#0070bc] text-xs uppercase tracking-wider font-bold rounded-lg transition-all shadow-md"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-white/95 hover:bg-[#009886] text-[#009886] hover:text-white border border-[#009886] text-xs uppercase tracking-wider font-bold rounded-lg transition-all shadow-md"
             >
               <Camera className="w-3.5 h-3.5" />
               <span>View in My Room (Camera)</span>
@@ -140,10 +140,10 @@ export function ProductGallery({
                 onClick={() => setSelectedIndex(idx)}
                 className={cn(
                   "relative h-20 sm:h-24 rounded-xl overflow-hidden border transition-all shadow-xs flex items-center justify-center",
-                  isThumbPng ? "bg-gradient-to-b from-[#f0f7fd] to-[#e6f4fd]" : "bg-white",
+                  isThumbPng ? "bg-gradient-to-b from-[#f0f7fd] to-[#e6f7f5]" : "bg-white",
                   selectedIndex === idx
-                    ? "border-[#0070bc] ring-2 ring-[#0070bc]/40 opacity-100"
-                    : "border-[#e6f4fd] opacity-70 hover:opacity-100"
+                    ? "border-[#009886] ring-2 ring-[#009886]/40 opacity-100"
+                    : "border-[#e6f7f5] opacity-70 hover:opacity-100"
                 )}
               >
                 <Image
@@ -165,7 +165,7 @@ export function ProductGallery({
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90">
             <button
               onClick={() => setIsZoomModalOpen(false)}
-              className="absolute top-6 right-6 p-3 text-white hover:text-[#0070bc] bg-white/10 rounded-full z-50"
+              className="absolute top-6 right-6 p-3 text-white hover:text-[#009886] bg-white/10 rounded-full z-50"
               aria-label="Close zoomed view"
             >
               <X className="w-6 h-6" />

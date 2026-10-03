@@ -32,7 +32,7 @@ export function CraftsmanshipSpotlight() {
   ];
 
   return (
-    <section className="py-24 bg-white border-t border-[#e6f4fd]">
+    <section className="py-24 bg-white border-t border-[#e6f7f5]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left Text & Process Steps */}
@@ -53,9 +53,9 @@ export function CraftsmanshipSpotlight() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: i * 0.1 }}
-                  className="p-4 bg-[#e6f4fd]/50 border border-[#e6f4fd] hover:border-[#0070bc] rounded-sm flex items-start gap-4 transition-colors"
+                  className="p-4 bg-[#e6f7f5]/50 border border-[#e6f7f5] hover:border-[#009886] rounded-sm flex items-start gap-4 transition-colors"
                 >
-                  <span className="font-mono text-sm text-[#0070bc] font-bold">
+                  <span className="font-mono text-sm text-[#009886] font-bold">
                     {p.step}
                   </span>
                   <div>
@@ -70,10 +70,10 @@ export function CraftsmanshipSpotlight() {
               ))}
             </div>
 
-            <div className="mt-8 pt-6 border-t border-[#e6f4fd]">
+            <div className="mt-8 pt-6 border-t border-[#e6f7f5]">
               <Link
                 href="/about"
-                className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] font-bold text-[#0070bc] hover:text-black transition-colors"
+                className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] font-bold text-[#009886] hover:text-black transition-colors"
               >
                 <span>Read About Our Factory & Capabilities</span>
                 <ArrowRight className="w-4 h-4" />
@@ -83,7 +83,7 @@ export function CraftsmanshipSpotlight() {
 
           {/* Right Image Matrix */}
           <div className="lg:col-span-6 relative">
-            <div className="relative h-[480px] sm:h-[580px] w-full rounded-sm overflow-hidden border-2 border-[#e6f4fd] bg-[#e6f4fd] shadow-md">
+            <div className="relative h-[480px] sm:h-[580px] w-full rounded-sm overflow-hidden border-2 border-[#e6f7f5] bg-[#e6f7f5] shadow-md">
               <Image
                 src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1600&q=80"
                 alt="SMC Fabrication Workshop Joinery Precision"
@@ -93,17 +93,17 @@ export function CraftsmanshipSpotlight() {
               />
 
               {/* Floating Badge */}
-              <div className="absolute bottom-6 left-6 right-6 p-4 bg-white/95 backdrop-blur-md border border-[#0070bc]/30 rounded-sm shadow-md">
+              <div className="absolute bottom-6 left-6 right-6 p-4 bg-white/95 backdrop-blur-md border border-[#009886]/30 rounded-sm shadow-md">
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="text-[10px] uppercase font-mono tracking-widest text-[#0070bc] font-bold">
+                    <span className="text-[10px] uppercase font-mono tracking-widest text-[#009886] font-bold">
                       Quality Assurance
                     </span>
                     <h5 className="text-sm font-bold text-black mt-0.5">
                       100% Quality & Factory Pressure Tested
                     </h5>
                   </div>
-                  <ShieldCheck className="w-6 h-6 text-[#0070bc] shrink-0" />
+                  <ShieldCheck className="w-6 h-6 text-[#009886] shrink-0" />
                 </div>
               </div>
             </div>
