@@ -16,15 +16,13 @@ import {
   Upload,
   Image as ImageIcon,
   ChevronDown,
-  Info,
-  Shield,
-  Sparkles,
+  RefreshCw,
 } from "lucide-react";
 import { Product, ColorFinishOption } from "@/types/product";
 import { PRODUCTS_DATA } from "@/data/products";
 import { cn } from "@/lib/utils";
 
-// Curated architectural room backdrops for fallback / desktop simulation
+// Curated architectural room backdrops for fallback / simulation
 const SAMPLE_ROOMS = [
   {
     id: "villa-entrance",
@@ -61,15 +59,16 @@ export function CameraProductPreview({
   product: initialProduct,
   selectedFinish: initialFinish,
 }: CameraProductPreviewProps) {
-  // Active product selection (allows switching inside visualizer)
+  // Active product selection
   const [currentProduct, setCurrentProduct] = useState<Product>(initialProduct);
   const [activeVariantIndex, setActiveVariantIndex] = useState<number>(0);
 
   // Camera stream state
   const [stream, setStream] = useState<MediaStream | null>(null);
+  const [isCameraLoading, setIsCameraLoading] = useState(false);
   const [cameraPermission, setCameraPermission] = useState<
-    "prompt" | "granted" | "denied" | "unsupported"
-  >("prompt");
+    "idle" | "granted" | "denied" | "unsupported"
+  >("idle");
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [facingMode, setFacingMode] = useState<"environment" | "user">("environment");
   const [hasMultipleCameras, setHasMultipleCameras] = useState(false);
@@ -94,7 +93,6 @@ export function CameraProductPreview({
   const [showControls, setShowControls] = useState(true);
   const [showProductDropdown, setShowProductDropdown] = useState(false);
   const [screenshotCaptured, setScreenshotCaptured] = useState(false);
-  const [showInfoBanner, setShowInfoBanner] = useState(true);
 
   // DOM Refs
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -114,7 +112,7 @@ export function CameraProductPreview({
       ? currentProduct.pngVariants[activeVariantIndex]?.pngUrl ||
         currentProduct.transparentPngUrl ||
         currentProduct.images[0]
-      : currentProduct.transparentPngUrl || "/overlays/door-wood.png";
+      : currentProduct.transparentPngUrl || "/images/product-pivot-door.png";
 
   // Check multi-camera availability
   useEffect(() => {
@@ -150,95 +148,125 @@ export function CameraProductPreview({
     }
   }, [stream]);
 
-  // Handle modal open/close lifecycle
-  useEffect(() => {
-    if (!isOpen) {
-      stopCamera();
-      // Reset position and transforms on close
-      setPosition({ x: 0, y: 0 });
-      setScale(1.0);
-      setRotation(0);
-      setOpacity(1.0);
-      setIsFlipped(false);
-      setCameraPermission("prompt");
-      setCameraError(null);
-      setCustomRoomImage(null);
-      setShowProductDropdown(false);
+  // Reliable stream getter with fallback constraints
+  const getCameraStream = async (desiredFacingMode: "environment" | "user") => {
+    // 1. Try with ideal facingMode and dimensions
+    try {
+      return await navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: {
+          facingMode: { ideal: desiredFacingMode },
+          width: { ideal: 1920 },
+          height: { ideal: 1080 },
+        },
+      });
+    } catch (e1) {
+      console.warn("High-res camera constraint failed, trying basic facingMode", e1);
     }
-    return () => {
-      stopCamera();
-    };
-  }, [isOpen, stopCamera]);
 
-  // Request rear-facing live camera stream only after user clicks button
+    // 2. Try with facingMode only
+    try {
+      return await navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: { facingMode: desiredFacingMode },
+      });
+    } catch (e2) {
+      console.warn("facingMode constraint failed, trying plain video", e2);
+    }
+
+    // 3. Fallback to any available video input
+    return await navigator.mediaDevices.getUserMedia({
+      audio: false,
+      video: true,
+    });
+  };
+
+  // Start Camera
   const startCamera = useCallback(
     async (desiredFacingMode = facingMode) => {
+      if (typeof window === "undefined") return;
+
+      setIsCameraLoading(true);
+      setCameraError(null);
+
+      if (stream) {
+        stream.getTracks().forEach((track) => {
+          try {
+            track.stop();
+          } catch {}
+        });
+      }
+
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        setCameraPermission("unsupported");
+        setUseFallbackRoom(true);
+        setIsCameraLoading(false);
+        setCameraError("Camera is not supported on this device/browser.");
+        return;
+      }
+
       try {
-        setCameraError(null);
-        if (stream) {
-          stream.getTracks().forEach((track) => track.stop());
-        }
-
-        if (
-          typeof window === "undefined" ||
-          !navigator.mediaDevices ||
-          !navigator.mediaDevices.getUserMedia
-        ) {
-          setCameraPermission("unsupported");
-          setUseFallbackRoom(true);
-          setCameraError(
-            "Live camera API is unavailable in this environment. Using architectural room simulator."
-          );
-          return;
-        }
-
-        const constraints: MediaStreamConstraints = {
-          audio: false, // Never request audio
-          video: {
-            facingMode: { ideal: desiredFacingMode },
-            width: { ideal: 1920 },
-            height: { ideal: 1080 },
-          },
-        };
-
-        const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
+        const mediaStream = await getCameraStream(desiredFacingMode);
         setStream(mediaStream);
         setCameraPermission("granted");
         setUseFallbackRoom(false);
-
-        if (videoRef.current) {
-          videoRef.current.srcObject = mediaStream;
-          videoRef.current.play().catch(() => {});
-        }
+        setIsCameraLoading(false);
       } catch (err: any) {
-        console.warn("Camera request error:", err);
+        console.warn("Camera access error:", err);
+        setIsCameraLoading(false);
         if (
           err.name === "NotAllowedError" ||
           err.name === "PermissionDeniedError"
         ) {
           setCameraPermission("denied");
-          setCameraError(
-            "Camera permission was denied. You can still test the door/window overlay on the room simulation below or upload a room photo."
-          );
-        } else if (
-          err.name === "NotFoundError" ||
-          err.name === "DevicesNotFoundError"
-        ) {
-          setCameraPermission("unsupported");
-          setCameraError(
-            "No camera device detected. Switched to high-resolution architectural room preview."
-          );
+          setCameraError("Camera permission denied. Switched to room preview.");
         } else {
-          setCameraPermission("denied");
-          setCameraError(
-            "Could not open camera. Switched to high-resolution architectural room preview."
-          );
+          setCameraPermission("unsupported");
+          setCameraError("Could not access camera. Switched to room preview.");
         }
         setUseFallbackRoom(true);
       }
     },
     [facingMode, stream]
   );
+
+  // Attach stream to videoRef whenever stream or videoRef becomes available
+  useEffect(() => {
+    if (videoRef.current && stream && !useFallbackRoom) {
+      videoRef.current.srcObject = stream;
+      const playVideo = async () => {
+        try {
+          await videoRef.current?.play();
+        } catch (err) {
+          console.warn("Video auto-play failed, will retry on loadedmetadata", err);
+        }
+      };
+      playVideo();
+    }
+  }, [stream, useFallbackRoom]);
+
+  // Handle modal open/close lifecycle
+  useEffect(() => {
+    if (isOpen) {
+      // Auto-start camera when modal opens
+      startCamera(facingMode);
+    } else {
+      stopCamera();
+      setPosition({ x: 0, y: 0 });
+      setScale(1.0);
+      setRotation(0);
+      setOpacity(1.0);
+      setIsFlipped(false);
+      setCameraPermission("idle");
+      setCameraError(null);
+      setCustomRoomImage(null);
+      setShowProductDropdown(false);
+      setIsCameraLoading(false);
+    }
+    return () => {
+      stopCamera();
+    };
+  }, [isOpen]);
 
   // Switch between Rear and Front cameras
   const toggleFacingMode = () => {
@@ -420,491 +448,404 @@ export function CameraProductPreview({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 bg-white flex flex-col select-none overflow-hidden touch-none font-sans">
-        {/* Permission Request Prompt Screen */}
-        {cameraPermission === "prompt" ? (
-          <div className="flex-1 flex flex-col items-center justify-center p-6 text-center max-w-lg mx-auto">
-            <div className="w-20 h-20 bg-[#e6f4fd] border-2 border-[#0070bc] rounded-2xl flex items-center justify-center text-[#0070bc] mb-6 shadow-md">
-              <Camera className="w-10 h-10" />
-            </div>
+      <div className="fixed inset-0 z-50 bg-black flex flex-col select-none overflow-hidden touch-none font-sans">
+        {/* Main Viewport */}
+        <div
+          ref={containerRef}
+          className="relative flex-1 w-full h-full bg-black overflow-hidden"
+          onMouseMove={(e) => handlePointerMove(e.clientX, e.clientY)}
+          onMouseUp={handlePointerUp}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handlePointerUp}
+        >
+          {/* 1. Live Camera Stream Video (Always in DOM for WebKit iOS & Android) */}
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            muted
+            webkit-playsinline="true"
+            onLoadedMetadata={() => {
+              videoRef.current?.play().catch(() => {});
+            }}
+            className={cn(
+              "absolute inset-0 w-full h-full object-cover pointer-events-none transition-opacity duration-300",
+              useFallbackRoom ? "opacity-0 invisible" : "opacity-100 visible"
+            )}
+          />
 
-            <span className="text-xs uppercase tracking-[0.25em] font-bold text-[#0070bc]">
-              Room Camera Visualizer
-            </span>
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-black mt-2">
-              View {currentProduct.name} In Your Room
-            </h3>
+          {/* 2. Fallback Architectural Room Backdrop */}
+          {useFallbackRoom && (
+            <div className="absolute inset-0 w-full h-full bg-neutral-900">
+              {customRoomImage ? (
+                <img
+                  src={customRoomImage}
+                  alt="Custom Room"
+                  className="w-full h-full object-cover pointer-events-none"
+                />
+              ) : (
+                <Image
+                  src={SAMPLE_ROOMS[selectedSampleRoomIndex].url}
+                  alt={SAMPLE_ROOMS[selectedSampleRoomIndex].name}
+                  fill
+                  sizes="100vw"
+                  className="object-cover pointer-events-none"
+                />
+              )}
 
-            <p className="text-xs sm:text-sm text-black/75 mt-3 leading-relaxed">
-              Superimpose a high-resolution, transparent 2D architectural overlay
-              of this {currentProduct.categoryName.toLowerCase()} directly onto your
-              camera feed.
-            </p>
-
-            {/* Privacy & Feature Guarantee Points */}
-            <div className="my-6 p-4 bg-[#e6f4fd] border border-[#0070bc]/30 rounded-xl text-xs text-black/85 text-left space-y-2.5 w-full font-medium shadow-xs">
-              <div className="flex items-start gap-2.5">
-                <Shield className="w-4 h-4 text-[#0070bc] shrink-0 mt-0.5" />
-                <span>
-                  <strong>100% Private & Local:</strong> Camera runs strictly in
-                  your browser. No video or audio is ever recorded or uploaded.
+              {/* Sample Room Switcher Floating Bar */}
+              <div className="absolute top-18 left-3 right-3 sm:right-auto bg-black/80 backdrop-blur-md border border-white/20 p-2 rounded-xl text-xs text-white flex items-center gap-2 z-20 shadow-lg overflow-x-auto">
+                <span className="text-[10px] uppercase font-mono font-bold text-[#e6f4fd] px-1 whitespace-nowrap">
+                  Backdrop:
                 </span>
-              </div>
-              <div className="flex items-start gap-2.5">
-                <Sliders className="w-4 h-4 text-[#0070bc] shrink-0 mt-0.5" />
-                <span>
-                  <strong>Interactive Placement:</strong> Drag, resize, tilt, and
-                  flip the door/window to test fitting in your wall opening.
-                </span>
-              </div>
-              <div className="flex items-start gap-2.5">
-                <Info className="w-4 h-4 text-[#0070bc] shrink-0 mt-0.5" />
-                <span>
-                  <strong>2D Reference Overlay:</strong> Manually positioned
-                  overlay for architectural visual reference.
-                </span>
-              </div>
-            </div>
-
-            {/* Actions */}
-            <div className="flex flex-col sm:flex-row gap-3 w-full">
-              <button
-                onClick={() => startCamera("environment")}
-                className="flex-1 py-4 px-6 bg-[#0070bc] hover:bg-black text-white text-xs uppercase font-bold tracking-[0.2em] rounded-xl transition-all shadow-md flex items-center justify-center gap-2"
-              >
-                <Camera className="w-4 h-4 text-white" />
-                <span>Allow Camera & Launch</span>
-              </button>
-
-              <button
-                onClick={() => {
-                  setUseFallbackRoom(true);
-                  setCameraPermission("granted");
-                }}
-                className="py-4 px-6 bg-[#e6f4fd] hover:bg-[#0070bc] hover:text-white text-black text-xs uppercase font-bold tracking-[0.18em] rounded-xl border border-[#0070bc]/30 transition-colors"
-              >
-                <span>Use Sample Room</span>
-              </button>
-            </div>
-
-            <button
-              onClick={onClose}
-              className="mt-6 text-xs text-black/60 hover:text-black uppercase tracking-wider font-bold py-2 px-4"
-            >
-              Cancel & Return
-            </button>
-          </div>
-        ) : (
-          /* Live Camera / Room Visualizer Viewport */
-          <div
-            ref={containerRef}
-            className="relative flex-1 w-full h-full bg-black overflow-hidden"
-            onMouseMove={(e) => handlePointerMove(e.clientX, e.clientY)}
-            onMouseUp={handlePointerUp}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handlePointerUp}
-          >
-            {/* 1. Live Camera Stream Video */}
-            {!useFallbackRoom ? (
-              <video
-                ref={videoRef}
-                autoPlay
-                playsInline
-                muted
-                className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-              />
-            ) : (
-              /* 2. Fallback Architectural Room Backdrop */
-              <div className="absolute inset-0 w-full h-full bg-neutral-900">
-                {customRoomImage ? (
-                  <img
-                    src={customRoomImage}
-                    alt="Custom Room"
-                    className="w-full h-full object-cover pointer-events-none"
-                  />
-                ) : (
-                  <Image
-                    src={SAMPLE_ROOMS[selectedSampleRoomIndex].url}
-                    alt={SAMPLE_ROOMS[selectedSampleRoomIndex].name}
-                    fill
-                    sizes="100vw"
-                    className="object-cover pointer-events-none"
-                  />
-                )}
-
-                {/* Sample Room Switcher Floating Bar */}
-                <div className="absolute top-20 left-4 right-4 sm:right-auto bg-black/75 backdrop-blur-md border border-white/20 p-2 rounded-xl text-xs text-white flex items-center gap-2 z-20 shadow-lg overflow-x-auto">
-                  <span className="text-[10px] uppercase font-mono font-bold text-[#e6f4fd] px-2 whitespace-nowrap">
-                    Backdrop:
-                  </span>
-                  {SAMPLE_ROOMS.map((room, idx) => (
-                    <button
-                      key={room.id}
-                      onClick={() => {
-                        setSelectedSampleRoomIndex(idx);
-                        setCustomRoomImage(null);
-                      }}
-                      className={cn(
-                        "px-2.5 py-1 text-[11px] rounded-lg transition-colors whitespace-nowrap",
-                        selectedSampleRoomIndex === idx && !customRoomImage
-                          ? "bg-[#0070bc] text-white font-bold"
-                          : "bg-white/10 hover:bg-white/20 text-white/80"
-                      )}
-                    >
-                      {room.name}
-                    </button>
-                  ))}
-
+                {SAMPLE_ROOMS.map((room, idx) => (
                   <button
-                    onClick={() => fileInputRef.current?.click()}
+                    key={room.id}
+                    onClick={() => {
+                      setSelectedSampleRoomIndex(idx);
+                      setCustomRoomImage(null);
+                    }}
                     className={cn(
-                      "px-2.5 py-1 text-[11px] rounded-lg transition-colors whitespace-nowrap flex items-center gap-1.5",
-                      customRoomImage
+                      "px-2.5 py-1 text-[11px] rounded-lg transition-colors whitespace-nowrap cursor-pointer",
+                      selectedSampleRoomIndex === idx && !customRoomImage
                         ? "bg-[#0070bc] text-white font-bold"
                         : "bg-white/10 hover:bg-white/20 text-white/80"
                     )}
                   >
-                    <Upload className="w-3 h-3" />
-                    <span>Upload Room</span>
+                    {room.name}
                   </button>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handleFileUpload}
-                  />
-                </div>
-              </div>
-            )}
+                ))}
 
-            {/* Subtle Alignment Grid Overlay */}
-            <div className="absolute inset-0 bg-[radial-gradient(#0070bc33_1px,transparent_1px)] [background-size:28px_28px] pointer-events-none opacity-40" />
-
-            {/* 2D Interactive Placement Info Banner */}
-            {showInfoBanner && (
-              <div className="absolute top-16 left-1/2 -translate-x-1/2 z-30 w-[92%] max-w-xl pointer-events-auto">
-                <div className="bg-black/80 backdrop-blur-md border border-white/20 p-3 rounded-xl text-white text-[11px] flex items-center justify-between gap-3 shadow-lg">
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-[#e6f4fd] shrink-0" />
-                    <span>
-                      <strong>2D Interactive Visualizer:</strong> Drag, resize, and
-                      align overlay with your opening.
-                    </span>
-                  </div>
-                  <button
-                    onClick={() => setShowInfoBanner(false)}
-                    className="text-white/60 hover:text-white p-1"
-                    aria-label="Dismiss banner"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* TOP HEADER CONTROLS */}
-            <div className="absolute top-0 left-0 right-0 p-3 sm:p-4 z-30 flex items-center justify-between bg-gradient-to-b from-black/85 via-black/40 to-transparent">
-              {/* Left: Close button + Product info chip */}
-              <div className="flex items-center gap-2">
                 <button
-                  onClick={onClose}
-                  className="p-2.5 bg-white/95 hover:bg-white text-black rounded-xl border border-[#e6f4fd] transition-colors shadow-md"
-                  aria-label="Close camera visualizer"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-
-                {/* Product Switcher Trigger */}
-                <div className="relative">
-                  <button
-                    onClick={() => setShowProductDropdown(!showProductDropdown)}
-                    className="bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-[#e6f4fd] shadow-md flex items-center gap-2 text-left"
-                  >
-                    <div>
-                      <h4 className="text-xs font-bold text-black truncate max-w-[150px] sm:max-w-xs">
-                        {currentProduct.name}
-                      </h4>
-                      <span className="text-[10px] text-[#0070bc] font-mono font-bold block">
-                        {currentProduct.sku} • {currentProduct.dimensions.standardWidthMm}×{currentProduct.dimensions.standardHeightMm}mm
-                      </span>
-                    </div>
-                    <ChevronDown className="w-4 h-4 text-black/60 shrink-0" />
-                  </button>
-
-                  {/* Product Switcher Dropdown */}
-                  {showProductDropdown && (
-                    <div className="absolute top-full left-0 mt-2 w-72 max-h-80 bg-white border-2 border-[#e6f4fd] rounded-xl shadow-2xl overflow-y-auto z-40 p-1.5">
-                      <div className="px-3 py-1.5 text-[10px] uppercase font-bold text-black/50 tracking-wider">
-                        Switch Product Overlay
-                      </div>
-                      {PRODUCTS_DATA.map((p) => (
-                        <button
-                          key={p.id}
-                          onClick={() => {
-                            setCurrentProduct(p);
-                            setActiveVariantIndex(0);
-                            setShowProductDropdown(false);
-                          }}
-                          className={cn(
-                            "w-full text-left p-2.5 rounded-lg text-xs transition-colors flex items-center justify-between",
-                            p.id === currentProduct.id
-                              ? "bg-[#e6f4fd] text-[#0070bc] font-bold"
-                              : "hover:bg-black/5 text-black"
-                          )}
-                        >
-                          <span className="truncate">{p.name}</span>
-                          {p.id === currentProduct.id && (
-                            <Check className="w-3.5 h-3.5 text-[#0070bc] shrink-0" />
-                          )}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Right: Quick Action Buttons */}
-              <div className="flex items-center gap-2">
-                {/* Switch Camera Button (if device has front/back) */}
-                {hasMultipleCameras && !useFallbackRoom && (
-                  <button
-                    onClick={toggleFacingMode}
-                    className="p-2.5 bg-white/95 hover:bg-white text-black rounded-xl border border-[#e6f4fd] transition-colors shadow-md"
-                    title="Switch Rear/Front Camera"
-                  >
-                    <SwitchCamera className="w-4 h-4 text-[#0070bc]" />
-                  </button>
-                )}
-
-                {/* Switch to Backdrop Simulation / Camera */}
-                <button
-                  onClick={() => {
-                    if (useFallbackRoom) {
-                      startCamera();
-                    } else {
-                      stopCamera();
-                      setUseFallbackRoom(true);
-                    }
-                  }}
-                  className="p-2.5 bg-white/95 hover:bg-white text-black rounded-xl border border-[#e6f4fd] transition-colors shadow-md"
-                  title={
-                    useFallbackRoom ? "Switch to Live Camera" : "Switch to Room Backdrops"
-                  }
-                >
-                  {useFallbackRoom ? (
-                    <Camera className="w-4 h-4 text-[#0070bc]" />
-                  ) : (
-                    <ImageIcon className="w-4 h-4 text-[#0070bc]" />
-                  )}
-                </button>
-
-                {/* Flip Left/Right Handing */}
-                <button
-                  onClick={() => setIsFlipped(!isFlipped)}
+                  onClick={() => fileInputRef.current?.click()}
                   className={cn(
-                    "p-2.5 rounded-xl border transition-colors shadow-md",
-                    isFlipped
-                      ? "bg-[#0070bc] text-white border-[#0070bc]"
-                      : "bg-white/95 hover:bg-white text-black border-[#e6f4fd]"
+                    "px-2.5 py-1 text-[11px] rounded-lg transition-colors whitespace-nowrap flex items-center gap-1.5 cursor-pointer",
+                    customRoomImage
+                      ? "bg-[#0070bc] text-white font-bold"
+                      : "bg-white/10 hover:bg-white/20 text-white/80"
                   )}
-                  title="Flip Opening Direction"
                 >
-                  <FlipHorizontal className="w-4 h-4" />
+                  <Upload className="w-3 h-3" />
+                  <span>Upload</span>
                 </button>
-
-                {/* Reset Transform */}
-                <button
-                  onClick={handleReset}
-                  className="p-2.5 bg-white/95 hover:bg-white text-black rounded-xl border border-[#e6f4fd] transition-colors shadow-md"
-                  title="Reset Position & Scale"
-                >
-                  <RotateCcw className="w-4 h-4 text-[#0070bc]" />
-                </button>
-
-                {/* Toggle Controls Drawer */}
-                <button
-                  onClick={() => setShowControls(!showControls)}
-                  className={cn(
-                    "p-2.5 rounded-xl border transition-colors shadow-md",
-                    showControls
-                      ? "bg-[#0070bc] text-white border-[#0070bc]"
-                      : "bg-white/95 hover:bg-white text-black border-[#e6f4fd]"
-                  )}
-                  title="Toggle Controls Drawer"
-                >
-                  <Sliders className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-
-            {/* DRAGGABLE, RESIZABLE, AND ROTATABLE 2D TRANSPARENT PNG OVERLAY */}
-            <div
-              ref={overlayRef}
-              onMouseDown={(e) => handlePointerDown(e.clientX, e.clientY)}
-              onTouchStart={(e) => {
-                if (e.touches[0]) {
-                  handlePointerDown(e.touches[0].clientX, e.touches[0].clientY);
-                }
-              }}
-              onWheel={handleWheel}
-              style={{
-                transform: `translate(${position.x}px, ${position.y}px) rotate(${rotation}deg) scale(${scale}) ${
-                  isFlipped ? "scaleX(-1)" : ""
-                }`,
-                opacity: opacity,
-              }}
-              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 cursor-grab active:cursor-grabbing z-20 transition-opacity duration-150 group"
-            >
-              {/* Product Transparent PNG */}
-              <div className="relative w-64 sm:w-80 md:w-96 aspect-[1/2] max-h-[72vh] flex items-center justify-center pointer-events-auto">
-                <img
-                  src={overlayPngUrl}
-                  alt={currentProduct.name}
-                  className="w-full h-full object-contain filter drop-shadow-[0_18px_30px_rgba(0,0,0,0.65)]"
-                  draggable={false}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleFileUpload}
                 />
+              </div>
+            </div>
+          )}
 
-                {/* Drag bounding box indicator */}
-                {isDragging && (
-                  <div className="absolute inset-0 border-2 border-dashed border-[#0070bc] rounded-xl pointer-events-none" />
+          {/* Camera Loading Spinner */}
+          {isCameraLoading && !useFallbackRoom && (
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/60 text-white gap-2">
+              <RefreshCw className="w-8 h-8 animate-spin text-[#0070bc]" />
+              <span className="text-xs font-bold font-mono uppercase tracking-wider">
+                Connecting Live Camera...
+              </span>
+            </div>
+          )}
+
+          {/* Camera Error / Permission Notice */}
+          {cameraError && (
+            <div className="absolute top-18 left-3 right-3 sm:right-auto z-20 max-w-md bg-black/85 backdrop-blur-md border border-red-500/40 text-white text-xs p-3 rounded-xl flex items-center justify-between gap-3 shadow-xl">
+              <div className="flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
+                <span>{cameraError}</span>
+              </div>
+              <button
+                onClick={() => setCameraError(null)}
+                className="text-white/60 hover:text-white p-1"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+
+          {/* TOP HEADER CONTROLS */}
+          <div className="absolute top-0 left-0 right-0 p-3 z-30 flex items-center justify-between bg-gradient-to-b from-black/80 to-transparent">
+            {/* Left: Close button + Product info chip */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={onClose}
+                className="p-2.5 bg-white/95 hover:bg-white text-black rounded-xl border border-white/20 transition-colors shadow-md cursor-pointer"
+                aria-label="Close camera visualizer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              {/* Product Switcher Trigger */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowProductDropdown(!showProductDropdown)}
+                  className="bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/20 shadow-md flex items-center gap-2 text-left cursor-pointer"
+                >
+                  <div>
+                    <h4 className="text-xs font-bold text-black truncate max-w-[140px] sm:max-w-xs">
+                      {currentProduct.name}
+                    </h4>
+                    <span className="text-[10px] text-[#0070bc] font-mono font-bold block">
+                      {currentProduct.sku} • {currentProduct.dimensions.standardWidthMm}×{currentProduct.dimensions.standardHeightMm}mm
+                    </span>
+                  </div>
+                  <ChevronDown className="w-4 h-4 text-black/60 shrink-0" />
+                </button>
+
+                {/* Product Switcher Dropdown */}
+                {showProductDropdown && (
+                  <div className="absolute top-full left-0 mt-2 w-72 max-h-80 bg-white border border-[#e6f4fd] rounded-xl shadow-2xl overflow-y-auto z-40 p-1.5">
+                    <div className="px-3 py-1.5 text-[10px] uppercase font-bold text-black/50 tracking-wider">
+                      Switch Product
+                    </div>
+                    {PRODUCTS_DATA.map((p) => (
+                      <button
+                        key={p.id}
+                        onClick={() => {
+                          setCurrentProduct(p);
+                          setActiveVariantIndex(0);
+                          setShowProductDropdown(false);
+                        }}
+                        className={cn(
+                          "w-full text-left p-2.5 rounded-lg text-xs transition-colors flex items-center justify-between cursor-pointer",
+                          p.id === currentProduct.id
+                            ? "bg-[#e6f4fd] text-[#0070bc] font-bold"
+                            : "hover:bg-black/5 text-black"
+                        )}
+                      >
+                        <span className="truncate">{p.name}</span>
+                        {p.id === currentProduct.id && (
+                          <Check className="w-3.5 h-3.5 text-[#0070bc] shrink-0" />
+                        )}
+                      </button>
+                    ))}
+                  </div>
                 )}
               </div>
             </div>
 
-            {/* Floating helper chip */}
-            <div className="absolute bottom-32 left-1/2 -translate-x-1/2 z-20 pointer-events-none">
-              <div className="px-4 py-1.5 bg-black/75 backdrop-blur-md rounded-full border border-white/20 text-[10px] uppercase font-mono font-bold tracking-wider text-white shadow-lg whitespace-nowrap">
-                Drag To Reposition • Pinch / Sliders To Scale
-              </div>
-            </div>
+            {/* Right: Quick Action Buttons */}
+            <div className="flex items-center gap-2">
+              {/* Switch Camera Button (Rear / Front) */}
+              {hasMultipleCameras && !useFallbackRoom && (
+                <button
+                  onClick={toggleFacingMode}
+                  className="p-2.5 bg-white/95 hover:bg-white text-black rounded-xl border border-white/20 transition-colors shadow-md cursor-pointer"
+                  title="Switch Camera"
+                >
+                  <SwitchCamera className="w-4 h-4 text-[#0070bc]" />
+                </button>
+              )}
 
-            {/* BOTTOM ADJUSTMENT DRAWER & ACTIONS */}
-            {showControls && (
-              <motion.div
-                initial={{ y: 60, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: 60, opacity: 0 }}
-                className="absolute bottom-0 left-0 right-0 z-30 p-3 sm:p-4 pb-safe bg-white/95 border-t-2 border-[#e6f4fd] shadow-2xl flex flex-col gap-2.5"
+              {/* Switch between Live Camera & Room Backdrop */}
+              <button
+                onClick={() => {
+                  if (useFallbackRoom) {
+                    startCamera();
+                  } else {
+                    stopCamera();
+                    setUseFallbackRoom(true);
+                  }
+                }}
+                className="p-2.5 bg-white/95 hover:bg-white text-black rounded-xl border border-white/20 transition-colors shadow-md cursor-pointer"
+                title={useFallbackRoom ? "Switch to Live Camera" : "Switch to Sample Rooms"}
               >
-                {/* Sliders Grid: Size, Tilt, Opacity */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 bg-[#e6f4fd] p-2.5 sm:p-3 rounded-xl border border-[#e6f4fd] text-xs">
-                  {/* Size Scale Slider */}
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] uppercase font-mono text-black font-bold w-12 shrink-0">
-                      Size
-                    </span>
-                    <input
-                      type="range"
-                      min="0.4"
-                      max="2.5"
-                      step="0.05"
-                      value={scale}
-                      onChange={(e) => setScale(parseFloat(e.target.value))}
-                      className="flex-1 accent-[#0070bc] h-2 bg-white rounded-lg cursor-pointer"
-                    />
-                    <span className="text-[10px] font-mono text-black font-bold w-12 text-right">
-                      {Math.round(scale * 100)}%
-                    </span>
-                  </div>
+                {useFallbackRoom ? (
+                  <Camera className="w-4 h-4 text-[#0070bc]" />
+                ) : (
+                  <ImageIcon className="w-4 h-4 text-[#0070bc]" />
+                )}
+              </button>
 
-                  {/* Tilt / Rotation Slider */}
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] uppercase font-mono text-black font-bold w-12 shrink-0">
-                      Tilt
-                    </span>
-                    <input
-                      type="range"
-                      min="-35"
-                      max="35"
-                      step="1"
-                      value={rotation}
-                      onChange={(e) =>
-                        setRotation(parseInt(e.target.value, 10))
-                      }
-                      className="flex-1 accent-[#0070bc] h-2 bg-white rounded-lg cursor-pointer"
-                    />
-                    <span className="text-[10px] font-mono text-black font-bold w-12 text-right">
-                      {rotation}°
-                    </span>
-                  </div>
+              {/* Flip Left/Right */}
+              <button
+                onClick={() => setIsFlipped(!isFlipped)}
+                className={cn(
+                  "p-2.5 rounded-xl border transition-colors shadow-md cursor-pointer",
+                  isFlipped
+                    ? "bg-[#0070bc] text-white border-[#0070bc]"
+                    : "bg-white/95 hover:bg-white text-black border-white/20"
+                )}
+                title="Flip Direction"
+              >
+                <FlipHorizontal className="w-4 h-4" />
+              </button>
 
-                  {/* Opacity Slider */}
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] uppercase font-mono text-black font-bold w-12 shrink-0">
-                      Opacity
-                    </span>
-                    <input
-                      type="range"
-                      min="0.3"
-                      max="1.0"
-                      step="0.05"
-                      value={opacity}
-                      onChange={(e) => setOpacity(parseFloat(e.target.value))}
-                      className="flex-1 accent-[#0070bc] h-2 bg-white rounded-lg cursor-pointer"
-                    />
-                    <span className="text-[10px] font-mono text-black font-bold w-12 text-right">
-                      {Math.round(opacity * 100)}%
-                    </span>
-                  </div>
-                </div>
+              {/* Reset Transform */}
+              <button
+                onClick={handleReset}
+                className="p-2.5 bg-white/95 hover:bg-white text-black rounded-xl border border-white/20 transition-colors shadow-md cursor-pointer"
+                title="Reset Position"
+              >
+                <RotateCcw className="w-4 h-4 text-[#0070bc]" />
+              </button>
 
-                {/* Finish Variants & Snapshot Action Row */}
-                <div className="flex flex-wrap items-center justify-between gap-2.5">
-                  {/* Finish Variant Selector */}
-                  {currentProduct.pngVariants &&
-                  currentProduct.pngVariants.length > 1 ? (
-                    <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full sm:max-w-md">
-                      <span className="text-[10px] uppercase font-mono font-bold text-black/60 shrink-0 mr-1">
-                        Finish:
-                      </span>
-                      {currentProduct.pngVariants.map((variant, vIdx) => (
-                        <button
-                          key={vIdx}
-                          onClick={() => setActiveVariantIndex(vIdx)}
-                          className={cn(
-                            "px-3 py-1.5 text-[11px] uppercase tracking-wider rounded-lg border transition-colors whitespace-nowrap",
-                            activeVariantIndex === vIdx
-                              ? "bg-[#0070bc] text-white font-bold border-[#0070bc]"
-                              : "bg-[#e6f4fd] text-black border-[#e6f4fd] hover:border-[#0070bc]"
-                          )}
-                        >
-                          {variant.name}
-                        </button>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-[11px] text-black/70 font-semibold hidden sm:block">
-                      Architectural 2D Room Placement Visualizer
-                    </div>
-                  )}
-
-                  {/* Capture Snapshot Action Button */}
-                  <div className="flex items-center gap-2 ml-auto">
-                    <button
-                      onClick={handleCaptureScreenshot}
-                      className="px-5 py-2.5 bg-[#0070bc] hover:bg-black text-white text-xs uppercase font-bold tracking-wider rounded-xl transition-all shadow-md flex items-center gap-1.5"
-                    >
-                      <Download className="w-3.5 h-3.5 text-white" />
-                      <span>
-                        {screenshotCaptured ? "Saved to Device!" : "Save Snapshot"}
-                      </span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Footer Disclaimers */}
-                <div className="flex items-center justify-between text-[9px] text-black/60 pt-1 border-t border-[#e6f4fd]">
-                  <span>
-                    * 2D visual overlay. Final fabrication requires on-site
-                    laser survey verification.
-                  </span>
-                  <span>SMC FABRICATION Architectural Systems</span>
-                </div>
-              </motion.div>
-            )}
+              {/* Toggle Controls Drawer */}
+              <button
+                onClick={() => setShowControls(!showControls)}
+                className={cn(
+                  "p-2.5 rounded-xl border transition-colors shadow-md cursor-pointer",
+                  showControls
+                    ? "bg-[#0070bc] text-white border-[#0070bc]"
+                    : "bg-white/95 hover:bg-white text-black border-white/20"
+                )}
+                title="Toggle Controls"
+              >
+                <Sliders className="w-4 h-4" />
+              </button>
+            </div>
           </div>
-        )}
+
+          {/* DRAGGABLE, RESIZABLE, ROTATABLE TRANSPARENT PNG OVERLAY */}
+          <div
+            ref={overlayRef}
+            onMouseDown={(e) => handlePointerDown(e.clientX, e.clientY)}
+            onTouchStart={(e) => {
+              if (e.touches[0]) {
+                handlePointerDown(e.touches[0].clientX, e.touches[0].clientY);
+              }
+            }}
+            onWheel={handleWheel}
+            style={{
+              transform: `translate(${position.x}px, ${position.y}px) rotate(${rotation}deg) scale(${scale}) ${
+                isFlipped ? "scaleX(-1)" : ""
+              }`,
+              opacity: opacity,
+            }}
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 cursor-grab active:cursor-grabbing z-20 transition-opacity duration-150"
+          >
+            <div className="relative w-64 sm:w-80 md:w-96 aspect-[1/2] max-h-[72vh] flex items-center justify-center pointer-events-auto">
+              <img
+                src={overlayPngUrl}
+                alt={currentProduct.name}
+                className="w-full h-full object-contain filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.65)]"
+                draggable={false}
+              />
+
+              {isDragging && (
+                <div className="absolute inset-0 border-2 border-dashed border-[#0070bc] rounded-xl pointer-events-none" />
+              )}
+            </div>
+          </div>
+
+          {/* BOTTOM ADJUSTMENT DRAWER & ACTIONS */}
+          {showControls && (
+            <motion.div
+              initial={{ y: 50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 50, opacity: 0 }}
+              className="absolute bottom-0 left-0 right-0 z-30 p-3 sm:p-4 bg-white/95 border-t border-[#e6f4fd] shadow-2xl flex flex-col gap-2.5 backdrop-blur-md"
+            >
+              {/* Sliders Grid: Size, Tilt, Opacity */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 bg-[#e6f4fd] p-2.5 rounded-xl border border-[#e6f4fd] text-xs">
+                {/* Size Scale Slider */}
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] uppercase font-mono text-black font-bold w-12 shrink-0">
+                    Size
+                  </span>
+                  <input
+                    type="range"
+                    min="0.4"
+                    max="2.5"
+                    step="0.05"
+                    value={scale}
+                    onChange={(e) => setScale(parseFloat(e.target.value))}
+                    className="flex-1 accent-[#0070bc] h-2 bg-white rounded-lg cursor-pointer"
+                  />
+                  <span className="text-[10px] font-mono text-black font-bold w-10 text-right">
+                    {Math.round(scale * 100)}%
+                  </span>
+                </div>
+
+                {/* Tilt / Rotation Slider */}
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] uppercase font-mono text-black font-bold w-12 shrink-0">
+                    Tilt
+                  </span>
+                  <input
+                    type="range"
+                    min="-35"
+                    max="35"
+                    step="1"
+                    value={rotation}
+                    onChange={(e) =>
+                      setRotation(parseInt(e.target.value, 10))
+                    }
+                    className="flex-1 accent-[#0070bc] h-2 bg-white rounded-lg cursor-pointer"
+                  />
+                  <span className="text-[10px] font-mono text-black font-bold w-10 text-right">
+                    {rotation}°
+                  </span>
+                </div>
+
+                {/* Opacity Slider */}
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] uppercase font-mono text-black font-bold w-12 shrink-0">
+                    Opacity
+                  </span>
+                  <input
+                    type="range"
+                    min="0.3"
+                    max="1.0"
+                    step="0.05"
+                    value={opacity}
+                    onChange={(e) => setOpacity(parseFloat(e.target.value))}
+                    className="flex-1 accent-[#0070bc] h-2 bg-white rounded-lg cursor-pointer"
+                  />
+                  <span className="text-[10px] font-mono text-black font-bold w-10 text-right">
+                    {Math.round(opacity * 100)}%
+                  </span>
+                </div>
+              </div>
+
+              {/* Finish Variants & Snapshot Action Row */}
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                {/* Finish Variant Selector */}
+                {currentProduct.pngVariants &&
+                currentProduct.pngVariants.length > 1 ? (
+                  <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full sm:max-w-md">
+                    <span className="text-[10px] uppercase font-mono font-bold text-black/60 shrink-0 mr-1">
+                      Finish:
+                    </span>
+                    {currentProduct.pngVariants.map((variant, vIdx) => (
+                      <button
+                        key={vIdx}
+                        onClick={() => setActiveVariantIndex(vIdx)}
+                        className={cn(
+                          "px-3 py-1.5 text-[11px] uppercase tracking-wider rounded-lg border transition-colors whitespace-nowrap cursor-pointer",
+                          activeVariantIndex === vIdx
+                            ? "bg-[#0070bc] text-white font-bold border-[#0070bc]"
+                            : "bg-[#e6f4fd] text-black border-[#e6f4fd] hover:border-[#0070bc]"
+                        )}
+                      >
+                        {variant.name}
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-[11px] text-black/70 font-semibold hidden sm:block">
+                    Drag to move • Pinch to zoom
+                  </div>
+                )}
+
+                {/* Capture Snapshot Action Button */}
+                <div className="flex items-center gap-2 ml-auto">
+                  <button
+                    onClick={handleCaptureScreenshot}
+                    className="px-4 py-2 bg-[#0070bc] hover:bg-black text-white text-xs uppercase font-bold tracking-wider rounded-xl transition-all shadow-md flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Download className="w-3.5 h-3.5 text-white" />
+                    <span>
+                      {screenshotCaptured ? "Saved to Device!" : "Save Snapshot"}
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </div>
       </div>
     </AnimatePresence>
   );
