@@ -81,7 +81,7 @@ function interior(context: CanvasRenderingContext2D, char: string, font: string)
 
 function scrollParent(element: HTMLElement): HTMLElement | null {
   for (let p = element.parentElement; p; p = p.parentElement) {
-    if (/(auto|scroll)/.test(getComputedStyle(p).overflowY) && p !== document.body && p !== document.documentElement) return p;
+    if (/(auto|scroll|hidden)/.test(getComputedStyle(p).overflowY) && p !== document.body && p !== document.documentElement) return p;
   }
   return null;
 }
@@ -124,7 +124,7 @@ export default function GlyphPortal({
     const context = canvas.getContext("2d", { willReadFrequently: true });
     let disposed = false, raf = 0, dirty = true, active = true, ready = false;
     const mountedAt = performance.now();
-    let browserFrameSeen = true, stalled = false;
+    let browserFrameSeen = false, stalled = false;
     let W = 1, H = 1, travel = 1, startScale = 1, endScale = 1;
     let center = { x: 0, y: 0 }, target: Ink | null = null;
     let lastProgress = -1;
@@ -132,9 +132,18 @@ export default function GlyphPortal({
     let choosing = false;
     let bounds = { x: 0, y: 0, width: 1, height: 1 };
     let fontDirty = true;
-
+    // Freeze an available face for this mount. Late font swaps move the ink under the camera.
+    // Preload custom faces before mounting; pending/failed faces use the supplied fallback stack.
     glyph.style.fontFamily = fontFamily;
-    stalled = false;
+    const computedFamily = getComputedStyle(glyph).fontFamily;
+    const families = computedFamily.match(/(?:[^,"']+|"[^"]*"|'[^']*')+/g) ?? [];
+    const available = families.filter((family) => {
+      try { return document.fonts.check(`${weight} 100px ${family.trim()}`, text); }
+      catch { return false; }
+    });
+    glyph.style.fontFamily = [...available, DEFAULT_FONT].join(",");
+    // A pending requested face may also hold WebKit's render loop. Keep that mount static.
+    stalled = available.length < families.length;
 
     const readInk = () => {
       if (!context) return false;
@@ -236,7 +245,7 @@ export default function GlyphPortal({
       const viewportHeight = Math.max(1, Math.min(root?.clientHeight ?? smallViewport, smallViewport));
       H = motion.matches ? Math.min(viewportHeight * 0.75, 480) : viewportHeight;
       section.style.setProperty("--gp-height", `${H}px`);
-      travel = Math.max(1, (length - 1) * H);
+      travel = H * length;
       art.setAttribute("viewBox", `0 0 ${W} ${H}`);
       if (fontDirty) { ready = readInk(); fontDirty = false; }
       if (!ready) return;
@@ -257,7 +266,6 @@ export default function GlyphPortal({
       section.style.setProperty("--gp-word-bottom", `${H * .46 + bounds.height * startScale / 2}px`);
       section.dataset.gpReady = "true";
       section.dataset.gpMotion = !motion.matches && browserFrameSeen && !stalled && target ? "on" : "off";
-
     };
 
     const frame = (time?: number) => {

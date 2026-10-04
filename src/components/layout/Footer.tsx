@@ -206,10 +206,16 @@ export function Footer() {
               © {new Date().getFullYear()} SMC FABRICATIONS • UPVC DOORS AND WINDOWS • Pollachi. All rights reserved.
             </p>
           </div>
-          <div className="flex items-center gap-6 shrink-0">
+          <div className="flex flex-wrap items-center gap-4 sm:gap-6 shrink-0">
             <span className="flex items-center gap-1 text-[#009886] font-semibold">
               <ShieldCheck className="w-3.5 h-3.5" /> No. 1 UPVC Profiles in India • D Wood Go Green
             </span>
+            <Link
+              href="/admin"
+              className="text-[11px] text-black/40 hover:text-[#009886] transition-colors flex items-center gap-1"
+            >
+              <span>Staff / Admin Portal</span>
+            </Link>
           </div>
         </div>
       </div>

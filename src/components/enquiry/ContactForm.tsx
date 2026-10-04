@@ -2,8 +2,10 @@
 
 import React, { useState } from "react";
 import { Send, CheckCircle2 } from "lucide-react";
+import { useAdmin } from "@/context/AdminContext";
 
 export function ContactForm() {
+  const { addInquiry } = useAdmin();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -32,9 +34,20 @@ export function ContactForm() {
     if (!validate()) return;
     setIsSubmitting(true);
     setTimeout(() => {
+      try {
+        addInquiry({
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          phone: formData.phone.trim() || "+91 85319 92626",
+          subject: formData.subject,
+          message: formData.message.trim(),
+        });
+      } catch (err) {
+        console.error("Error saving inquiry to admin", err);
+      }
       setIsSubmitting(false);
       setIsSubmitted(true);
-    }, 800);
+    }, 600);
   };
 
   return (

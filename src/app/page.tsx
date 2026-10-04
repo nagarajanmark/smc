@@ -1,42 +1,43 @@
 import { GlyphPortalSection } from "@/components/home/GlyphPortalSection";
 import { WhoWeAreSection } from "@/components/home/WhoWeAreSection";
-import { TrustMetrics } from "@/components/home/TrustMetrics";
-import { CategoryGrid } from "@/components/home/CategoryGrid";
 import { FeaturedProducts } from "@/components/home/FeaturedProducts";
 import { ARPreviewFeature } from "@/components/home/ARPreviewFeature";
 import { CraftsmanshipSpotlight } from "@/components/home/CraftsmanshipSpotlight";
+import { TigerRevealSection } from "@/components/home/TigerRevealSection";
 import { ProjectsTeaser } from "@/components/home/ProjectsTeaser";
 import { CTASection } from "@/components/home/CTASection";
+import Demo from "@/components/ui/demo";
 
 export default function HomePage() {
   return (
     <div className="w-full flex flex-col">
-      {/* 1. Official SMC Logo Zoom Hero Section */}
-      <GlyphPortalSection />
+
+      {/* Interactive Glyph Portal Section - Full Width & Natural Scroll */}
+      <section className="w-full relative overflow-visible">
+        <Demo />
+      </section>
 
       {/* 2. Who We Are Section */}
       <WhoWeAreSection />
 
-      {/* 3. Trust & Introduction Metrics */}
-      <TrustMetrics />
-
-      {/* 4. Product Categories Grid */}
-      <CategoryGrid />
+      {/* Dynamic Scroll Reveal Hero */}
+      <TigerRevealSection />
 
       {/* 4. Interactive 3D & Mobile AR Room Visualizer Spotlight */}
       <ARPreviewFeature />
 
-      {/* 5. Featured Architectural Systems */}
+      {/* 6. Featured Architectural Systems */}
       <FeaturedProducts />
 
-      {/* 6. Manufacturing Capabilities & Engineering */}
+      {/* 7. Manufacturing Capabilities & Engineering */}
       <CraftsmanshipSpotlight />
 
-      {/* 7. Realized Architectural Projects */}
+      {/* 9. Realized Architectural Projects */}
       <ProjectsTeaser />
 
-      {/* 8. Call to Action / Quotation Invitation */}
+      {/* 10. Call to Action / Quotation Invitation */}
       <CTASection />
     </div>
   );
 }
+

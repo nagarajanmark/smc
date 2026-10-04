@@ -1,5 +1,18 @@
 import { Product } from "@/types/product";
 
+export const UPVC_SWATCH_FINISHES = [
+  { id: "fin-golden-oak", name: "Golden Oak", hex: "#b8783b", textureLabel: "Natural Golden Woodgrain" },
+  { id: "fin-rosewood", name: "Rosewood", hex: "#4d231a", textureLabel: "Deep Reddish Rosewood" },
+  { id: "fin-mahogany", name: "Mahogany", hex: "#3f2015", textureLabel: "Rich Chocolate Mahogany" },
+  { id: "fin-irish-oak", name: "Irish Oak", hex: "#cda061", textureLabel: "Light Honey Irish Oak" },
+  { id: "fin-black", name: "Black", hex: "#141414", textureLabel: "Matte Architectural Black" },
+  { id: "fin-dark-green", name: "Dark Green", hex: "#1a4233", textureLabel: "Heritage British Racing Green" },
+  { id: "fin-cream", name: "Cream", hex: "#ece6d8", textureLabel: "Classic Architectural Warm Cream" },
+  { id: "fin-white-ash", name: "White Ash", hex: "#ffffff", textureLabel: "Pristine Smooth White Ash" },
+  { id: "fin-anthracite", name: "Antracite Grey", hex: "#373e43", textureLabel: "Contemporary Slate Grey" },
+  { id: "fin-chartwell-green", name: "Chartwell Green", hex: "#94ab9b", textureLabel: "Heritage Vintage Sage" },
+];
+
 export const PRODUCTS_DATA: Product[] = [
   {
     id: "smc-pvt-01",
@@ -29,12 +42,7 @@ export const PRODUCTS_DATA: Product[] = [
       depthMm: 85,
       unit: "mm"
     },
-    finishes: [
-      { id: "fin-obsidian", name: "Matte Obsidian Black", hex: "#000000", textureLabel: "Micro-texture Fluorocarbon" },
-      { id: "fin-arch-blue", name: "Architectural Emerald Green", hex: "#009886", textureLabel: "Electro-anodized Metallic Satin" },
-      { id: "fin-ice-light", name: "Ice Mint Metallic", hex: "#e6f7f5", textureLabel: "Satin Powder Coated Texture" },
-      { id: "fin-white", name: "Signal Pure White", hex: "#ffffff", textureLabel: "Smooth Satin Finish" }
-    ],
+    finishes: UPVC_SWATCH_FINISHES,
     frameOptions: [
       { id: "frm-concealed", name: "Zero-Sightline Concealed Wall Frame", depthMm: 110, sightlineMm: 0, description: "Fully plastered into wall jambs for a minimalist shadow-gap perimeter." },
       { id: "frm-arch-75", name: "Architectural 75mm Heavy-Duty Jamb", depthMm: 120, sightlineMm: 75, description: "Substantial perimeter frame with dual continuous thermal breaks." }
@@ -115,12 +123,7 @@ export const PRODUCTS_DATA: Product[] = [
       depthMm: 180,
       unit: "mm"
     },
-    finishes: [
-      { id: "fin-black", name: "Deep Jet Black", hex: "#000000", textureLabel: "Ultra-Matte Marine Grade" },
-      { id: "fin-blue", name: "Architectural Emerald Green", hex: "#009886", textureLabel: "Satin Brushed Metallic" },
-      { id: "fin-ice", name: "Ice Mint Tint", hex: "#e6f7f5", textureLabel: "Fine Powder Coated Texture" },
-      { id: "fin-white", name: "Signal White", hex: "#ffffff", textureLabel: "Smooth Architectural Powder" }
-    ],
+    finishes: UPVC_SWATCH_FINISHES,
     frameOptions: [
       { id: "frm-flush-track", name: "Zero-Barrier Recessed Floor Track", depthMm: 180, sightlineMm: 20, description: "Completely flush with indoor flooring and exterior drainage deck." },
       { id: "frm-stepped-drain", name: "High-Monsoon Stepped Drain Track", depthMm: 210, sightlineMm: 25, description: "Enhanced water evacuation channels for coastal high-wind exposure." }
@@ -196,12 +199,7 @@ export const PRODUCTS_DATA: Product[] = [
       depthMm: 75,
       unit: "mm"
     },
-    finishes: [
-      { id: "fin-blue", name: "Architectural Emerald Green Anodized", hex: "#009886", textureLabel: "Satin Brushed Architectural" },
-      { id: "fin-black", name: "Obsidian Black", hex: "#000000", textureLabel: "Matte Powder Coating" },
-      { id: "fin-ice", name: "Ice Mint Light", hex: "#e6f7f5", textureLabel: "Fine Textured Coating" },
-      { id: "fin-white", name: "Pure Signal White", hex: "#ffffff", textureLabel: "Smooth Satin Finish" }
-    ],
+    finishes: UPVC_SWATCH_FINISHES,
     frameOptions: [
       { id: "frm-slim-75", name: "Slimline 75mm Profile with Concealed Hinges", depthMm: 75, sightlineMm: 68, description: "Concealed 180° hinges hidden completely within the profile chamber." },
       { id: "frm-stepped-85", name: "Heavy-Acoustic 85mm Profile", depthMm: 85, sightlineMm: 78, description: "Triple gasket chamber designed for maximum sound attenuation." }
@@ -276,12 +274,7 @@ export const PRODUCTS_DATA: Product[] = [
       depthMm: 65,
       unit: "mm"
     },
-    finishes: [
-      { id: "fin-black-timber", name: "Obsidian Black Stained Timber", hex: "#000000", textureLabel: "Wire-Brushed Open Pore Finish" },
-      { id: "fin-blue-timber", name: "Architectural Emerald Green Lacquer", hex: "#009886", textureLabel: "Matte Sealed Architectural Grain" },
-      { id: "fin-ice-timber", name: "Ice Mint Nordic Timber", hex: "#e6f7f5", textureLabel: "Light Stain Open Pore" },
-      { id: "fin-white-timber", name: "Pure White Satin Wood", hex: "#ffffff", textureLabel: "Natural Matte Clear Topcoat" }
-    ],
+    finishes: UPVC_SWATCH_FINISHES,
     frameOptions: [
       { id: "frm-solid-teak-jamb", name: "Matching Solid Hardwood Jamb", depthMm: 140, sightlineMm: 80, description: "Solid matching timber frame with integrated acoustic compression seal." }
     ],
@@ -354,12 +347,7 @@ export const PRODUCTS_DATA: Product[] = [
       depthMm: 80,
       unit: "mm"
     },
-    finishes: [
-      { id: "fin-upvc-white", name: "Alpine White (Smooth)", hex: "#ffffff", textureLabel: "UV-Resistant Smooth Polymer" },
-      { id: "fin-upvc-black", name: "Black Foil", hex: "#000000", textureLabel: "Architectural Embossed Foil" },
-      { id: "fin-upvc-blue", name: "Architectural Emerald Green Foil", hex: "#009886", textureLabel: "Realistic Color Film" },
-      { id: "fin-upvc-ice", name: "Ice Mint Light Foil", hex: "#e6f7f5", textureLabel: "Embossed Light Finish" }
-    ],
+    finishes: UPVC_SWATCH_FINISHES,
     frameOptions: [
       { id: "frm-upvc-80", name: "6-Chamber 80mm Depth Profile", depthMm: 80, sightlineMm: 72, description: "Multi-chamber design with continuous galvanized steel core reinforcement." }
     ],
@@ -433,12 +421,7 @@ export const PRODUCTS_DATA: Product[] = [
       depthMm: 50,
       unit: "mm"
     },
-    finishes: [
-      { id: "fin-primed-paint", name: "Pure White Primer", hex: "#ffffff", textureLabel: "Smooth Sanded Primer" },
-      { id: "fin-blue-int", name: "Architectural Emerald Green", hex: "#009886", textureLabel: "Ultra-Matte Blue Lacquer" },
-      { id: "fin-black-int", name: "Deep Jet Black", hex: "#000000", textureLabel: "Anti-Fingerprint Nanotech" },
-      { id: "fin-ice-int", name: "Ice Mint Soft-Touch", hex: "#e6f7f5", textureLabel: "Velvet Smooth Finish" }
-    ],
+    finishes: UPVC_SWATCH_FINISHES,
     frameOptions: [
       { id: "frm-frameless-jamb", name: "Concealed Plaster-In Aluminium Frame", depthMm: 100, sightlineMm: 0, description: "Zero-trim aluminium jamb embedded under plasterboard." }
     ],
@@ -509,12 +492,7 @@ export const PRODUCTS_DATA: Product[] = [
       depthMm: 85,
       unit: "mm"
     },
-    finishes: [
-      { id: "fin-bif-black", name: "Deep Satin Black", hex: "#000000", textureLabel: "Fluorocarbon 30-Year Coating" },
-      { id: "fin-bif-blue", name: "Architectural Emerald Green", hex: "#009886", textureLabel: "Electrochemical Anodized" },
-      { id: "fin-bif-ice", name: "Ice Mint Light", hex: "#e6f7f5", textureLabel: "Architectural Matte Finish" },
-      { id: "fin-bif-white", name: "Pure Signal White", hex: "#ffffff", textureLabel: "Smooth Satin Finish" }
-    ],
+    finishes: UPVC_SWATCH_FINISHES,
     frameOptions: [
       { id: "frm-low-threshold", name: "Low-Profile 15mm Weathered Threshold", depthMm: 85, sightlineMm: 110, description: "Minimal step-over threshold with certified rain seal." },
       { id: "frm-flush-channel", name: "Flush Floor Rebated Track", depthMm: 95, sightlineMm: 110, description: "Completely level indoor to outdoor floor transition." }
@@ -589,12 +567,7 @@ export const PRODUCTS_DATA: Product[] = [
       depthMm: 150,
       unit: "mm"
     },
-    finishes: [
-      { id: "fin-blue-arch", name: "Architectural Emerald Green", hex: "#009886", textureLabel: "Living Architectural Finish" },
-      { id: "fin-black-steel", name: "Obsidian Structural Steel", hex: "#000000", textureLabel: "Oxidized Velvet Texture" },
-      { id: "fin-ice-steel", name: "Ice Mint Anodized", hex: "#e6f7f5", textureLabel: "Ultra-High Durability Anodizing" },
-      { id: "fin-white-steel", name: "Signal Pure White", hex: "#ffffff", textureLabel: "Smooth Weatherproof Coating" }
-    ],
+    finishes: UPVC_SWATCH_FINISHES,
     frameOptions: [
       { id: "frm-bespoke-curved", name: "Custom Roll-Bended Structural Box Section", depthMm: 150, sightlineMm: 60, description: "Radius bent steel/aluminium framing engineered to blueprint curves." }
     ],

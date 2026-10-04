@@ -4,12 +4,13 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, Camera, Smartphone, Eye, QrCode } from "lucide-react";
+import { Camera, QrCode, Bookmark, BookmarkCheck } from "lucide-react";
 import { Product } from "@/types/product";
 import { Badge } from "@/components/common/Badge";
 import { CameraProductPreview } from "@/components/ar/CameraProductPreview";
 import { DesktopQRCodeModal } from "@/components/ar/DesktopQRCodeModal";
-import { cn, isMobileDevice } from "@/lib/utils";
+import { useAuth } from "@/context/AuthContext";
+import { cn } from "@/lib/utils";
 
 interface ProductCardProps {
   product: Product;
@@ -21,8 +22,22 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
   const [activeImageIndex] = useState(0);
 
+  const { isItemSaved, toggleSaveItem } = useAuth();
+  const isSaved = isItemSaved(product.slug);
+
   const handleOpenVisualizer = () => {
     setIsCameraPreviewOpen(true);
+  };
+
+  const handleToggleBookmark = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    toggleSaveItem({
+      productId: product.slug,
+      productName: product.name,
+      category: product.category,
+      sku: product.sku,
+      image: product.images[0] || "/images/products/upvc-window.png",
+    });
   };
 
   const isList = viewMode === "list";
@@ -39,14 +54,13 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
           isList ? "flex-col md:flex-row" : "flex-col"
         )}
       >
-        {/* Product Image Area with Architectural Studio Backdrop */}
+        {/* Product Image Area */}
         <div
           className={cn(
             "relative overflow-hidden bg-gradient-to-b from-[#f0f7fd] via-[#f9fcff] to-[#e6f7f5] shrink-0 flex items-center justify-center p-4 sm:p-6",
             isList ? "w-full md:w-80 h-64 md:h-auto" : "w-full h-72 sm:h-80"
           )}
         >
-          {/* Subtle Radial Glow & Pedestal Reflection */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/90 via-transparent to-transparent pointer-events-none" />
           <div className="absolute bottom-3 left-1/2 -translate-x-1/2 w-3/4 h-3 bg-black/10 rounded-full blur-md pointer-events-none" />
 
@@ -61,7 +75,7 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
             />
           </div>
 
-          {/* Top Badges */}
+          {/* Top Badges & Bookmark */}
           <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-10">
             {product.badge ? (
               <Badge variant="primary">{product.badge}</Badge>
@@ -69,19 +83,40 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
               <Badge variant="light">{product.categoryName}</Badge>
             )}
 
-            {product.arAvailable && (
+            <div className="flex items-center gap-1.5">
+              {/* Wishlist / Save Button */}
               <button
-                onClick={handleOpenVisualizer}
-                title="View in Camera Visualizer"
-                className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/95 hover:bg-[#009886] text-black hover:text-white text-[10px] uppercase tracking-wider font-bold rounded-full border border-[#e6f7f5] transition-colors shadow-sm"
+                type="button"
+                onClick={handleToggleBookmark}
+                title={isSaved ? "Saved" : "Save item"}
+                className={cn(
+                  "p-1.5 rounded-full border transition-all shadow-xs cursor-pointer",
+                  isSaved
+                    ? "bg-[#009886] text-white border-[#009886]"
+                    : "bg-white/90 text-black/60 hover:text-[#009886] border-[#e6f7f5]"
+                )}
               >
-                <Camera className="w-3 h-3 text-[#009886] group-hover:text-white" />
-                <span>View In My Room</span>
+                {isSaved ? (
+                  <BookmarkCheck className="w-3.5 h-3.5" />
+                ) : (
+                  <Bookmark className="w-3.5 h-3.5" />
+                )}
               </button>
-            )}
+
+              {product.arAvailable && (
+                <button
+                  onClick={handleOpenVisualizer}
+                  title="View in Camera Visualizer"
+                  className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 bg-white/95 hover:bg-[#009886] text-black hover:text-white text-[10px] uppercase tracking-wider font-bold rounded-full border border-[#e6f7f5] transition-colors shadow-sm cursor-pointer"
+                >
+                  <Camera className="w-3 h-3 text-[#009886] group-hover:text-white" />
+                  <span>Room AR</span>
+                </button>
+              )}
+            </div>
           </div>
 
-          {/* Camera Visualizer Hover Action Bar */}
+          {/* Hover Action Bar */}
           <div className="absolute bottom-3 left-3 right-3 z-10 flex items-center justify-between gap-2 opacity-95 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             <button
               onClick={handleOpenVisualizer}
@@ -103,13 +138,11 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
         {/* Product Information Body */}
         <div className="p-5 sm:p-6 flex flex-col justify-between flex-1 bg-white">
           <div>
-            {/* SKU and Opening Type */}
             <div className="flex items-center justify-between text-xs text-black/60 mb-2 font-mono font-medium">
               <span>{product.sku}</span>
               <span className="text-[#009886] font-bold font-sans">{product.openingType}</span>
             </div>
 
-            {/* Title */}
             <h3
               onClick={handleOpenVisualizer}
               className="text-lg font-extrabold text-black hover:text-[#009886] transition-colors leading-snug cursor-pointer"
@@ -117,12 +150,10 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
               {product.name}
             </h3>
 
-            {/* Short Description */}
             <p className="text-xs text-black/75 mt-2 line-clamp-2 leading-relaxed">
               {product.shortDescription}
             </p>
 
-            {/* Specifications Highlights */}
             <div className="mt-4 pt-3 border-t border-[#e6f7f5] grid grid-cols-2 gap-2 text-[11px] text-black/70">
               <div>
                 <span className="text-black/50 block font-semibold">Material:</span>
@@ -131,14 +162,13 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
                 </span>
               </div>
               <div>
-                <span className="text-black/50 block font-semibold">Standard Dimensions:</span>
+                <span className="text-black/50 block font-semibold">Standard Size:</span>
                 <span className="text-black font-bold truncate block font-mono">
                   {product.dimensions.standardWidthMm} × {product.dimensions.standardHeightMm} mm
                 </span>
               </div>
             </div>
 
-            {/* Available Finishes Palette Chips */}
             <div className="mt-3 flex items-center gap-2">
               <span className="text-[10px] text-black/50 uppercase tracking-wider font-bold">
                 Finishes:
@@ -161,14 +191,13 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
             </div>
           </div>
 
-          {/* Action Row */}
           <div className="mt-6 pt-4 border-t border-[#e6f7f5] flex items-center justify-between gap-3">
             <Link
               href={`/visualizer?product=${encodeURIComponent(product.slug)}`}
               className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider font-bold text-[#009886] hover:text-black transition-colors cursor-pointer"
             >
               <Camera className="w-3.5 h-3.5" />
-              <span>Studio Visualizer</span>
+              <span>Visualizer</span>
             </Link>
 
             <Link
@@ -181,14 +210,12 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
         </div>
       </motion.div>
 
-      {/* 2D Camera Room Visualizer Modal */}
       <CameraProductPreview
         isOpen={isCameraPreviewOpen}
         onClose={() => setIsCameraPreviewOpen(false)}
         product={product}
       />
 
-      {/* Desktop QR Modal for Phone Handoff */}
       <DesktopQRCodeModal
         isOpen={isQRModalOpen}
         onClose={() => setIsQRModalOpen(false)}

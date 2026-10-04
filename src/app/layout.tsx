@@ -1,15 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { Sora } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-
-const sora = Sora({
-  subsets: ["latin"],
-  variable: "--font-sora",
-  weight: ["300", "400", "500", "600", "700", "800"],
-  display: "swap",
-});
+import { ClientProviders } from "@/components/providers/ClientProviders";
 
 export const viewport: Viewport = {
   themeColor: "#009886",
@@ -75,13 +68,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={sora.variable}>
-      <body
-        className={`${sora.className} antialiased bg-white text-black min-h-screen flex flex-col`}
-      >
-        <Header />
-        <main className="flex-1 bg-white">{children}</main>
-        <Footer />
+    <html lang="en">
+      <body className="antialiased bg-white text-black min-h-screen flex flex-col font-sans">
+        <ClientProviders>
+          <Header />
+          <main className="flex-1 bg-white">{children}</main>
+          <Footer />
+        </ClientProviders>
       </body>
     </html>
   );

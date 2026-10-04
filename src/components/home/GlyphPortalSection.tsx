@@ -2,9 +2,7 @@
 
 import React, { useRef } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, Sparkles, ShieldCheck, Factory, Cpu, Camera, Phone } from "lucide-react";
 
 export function GlyphPortalSection() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -18,7 +16,6 @@ export function GlyphPortalSection() {
   const logoScale = useTransform(scrollYProgress, [0, 1], [1, 7.5]);
   const logoOpacity = useTransform(scrollYProgress, [0, 0.65, 0.95, 1], [1, 1, 0.2, 0]);
   const textOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0]);
-  const bannerOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
   const hintOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
 
   return (
@@ -36,22 +33,6 @@ export function GlyphPortalSection() {
             className="object-cover object-right lg:object-center opacity-100 scale-100"
           />
         </div>
-
-        {/* Top Header Tag */}
-        <motion.div 
-          style={{ opacity: bannerOpacity }}
-          className="absolute top-20 sm:top-24 left-6 right-6 z-30 flex items-center justify-between max-w-7xl mx-auto pointer-events-none"
-        >
-          <div className="flex items-center gap-2 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-[#e6f7f5] shadow-sm pointer-events-auto">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#009886] animate-pulse" />
-            <span className="text-xs font-mono font-bold tracking-widest text-[#009886] uppercase">
-              SMC FABRICATIONS • POLLACHI
-            </span>
-          </div>
-          <span className="text-xs font-extrabold uppercase tracking-wider text-black/80 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-[#e6f7f5] shadow-sm hidden sm:inline-block pointer-events-auto">
-            UPVC Architectural Profiles
-          </span>
-        </motion.div>
 
         {/* 1. LEFT-ALIGNED HERO (ONLY LOGO SCALES SMOOTHLY) */}
         <div className="relative z-20 w-full max-w-7xl mx-auto px-6 sm:px-12 flex items-center justify-start pointer-events-none">
